@@ -42,4 +42,10 @@ public class PlayerService {
         return playerRepository.findByTeam(team);
     }
 
+    public List<Player> searchByGame(String game) {
+        if(game == null || game.isBlank()) {
+            return Collections.emptyList();
+        }
+        return playerRepository.findByGame(game);
+    }
 }

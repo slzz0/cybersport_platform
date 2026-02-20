@@ -1,6 +1,7 @@
 package com.example.cybersport_platform.repository;
 
 import com.example.cybersport_platform.model.Player;
+import org.springframework.data.repository.query.parser.Part;
 import org.springframework.stereotype.Repository;
 
 import jakarta.annotation.PostConstruct;
@@ -43,6 +44,13 @@ public class PlayerRepository {
         return players.stream()
                 .filter(player -> player.getTeam()
                         .equalsIgnoreCase(team))
+                .toList();
+    }
+
+    public List<Player> findByGame(String game) {
+        return players.stream()
+                .filter(player -> player.getGame()
+                        .equalsIgnoreCase(game))
                 .toList();
     }
 }

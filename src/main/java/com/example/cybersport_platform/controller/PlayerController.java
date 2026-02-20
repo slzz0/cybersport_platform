@@ -55,4 +55,11 @@ public class PlayerController {
                 .toList();
     }
 
+    @GetMapping("/game")
+    public List<PlayerDto> searchByGame(@RequestParam String game) {
+        return playerService.searchByGame(game)
+                .stream()
+                .map(PlayerMapper::toDto)
+                .toList();
+    }
 }
