@@ -28,39 +28,16 @@ public class GameWithTeamsServiceImpl implements GameWithTeamsService {
 
     @Override
     public void saveGameWithTeamsAndPlayersNonTransactional(GameWithTeamsRequest request) {
-        // Без @Transactional: каждый save() выполняется в своей транзакции и сразу коммитится.
-        // При исключении ниже в БД уже будут игра и две команды — частичное сохранение.
-        Game game = new Game();
-        game.setName(request.getGameName());
-        game.setDescription(request.getGameDescription());
-        game = gameRepository.save(game);
-
-        List<Team> teams = new ArrayList<>();
-        for (int i = 0; i < request.getTeamNames().size(); i++) {
-            Team team = new Team();
-            team.setName(request.getTeamNames().get(i));
-            team.setGame(game);
-            team = teamRepository.save(team);
-            teams.add(team);
-
-            if (request.isSimulateError() && i == 1) {
-                throw new DemoSimulatedException(ERROR_MSG);
-            }
-        }
-
-        for (int i = 0; i < teams.size(); i++) {
-            Player player = new Player();
-            player.setNickname("player_" + teams.get(i).getName());
-            player.setElo(1000);
-            player.setTeam(teams.get(i));
-            playerRepository.save(player);
-        }
+        doSaveGameWithTeamsAndPlayers(request);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveGameWithTeamsAndPlayersTransactional(GameWithTeamsRequest request) {
-        // С @Transactional: всё в одной транзакции. При любом исключении — полный откат.
+        doSaveGameWithTeamsAndPlayers(request);
+    }
+
+    private void doSaveGameWithTeamsAndPlayers(GameWithTeamsRequest request) {
         Game game = new Game();
         game.setName(request.getGameName());
         game.setDescription(request.getGameDescription());
