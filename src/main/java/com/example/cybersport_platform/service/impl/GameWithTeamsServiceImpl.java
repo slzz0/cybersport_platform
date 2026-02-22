@@ -1,6 +1,7 @@
 package com.example.cybersport_platform.service.impl;
 
 import com.example.cybersport_platform.dto.request.GameWithTeamsRequest;
+import com.example.cybersport_platform.exception.DemoSimulatedException;
 import com.example.cybersport_platform.model.Game;
 import com.example.cybersport_platform.model.Player;
 import com.example.cybersport_platform.model.Team;
@@ -43,7 +44,7 @@ public class GameWithTeamsServiceImpl implements GameWithTeamsService {
             teams.add(team);
 
             if (request.isSimulateError() && i == 1) {
-                throw new RuntimeException(ERROR_MSG);
+                throw new DemoSimulatedException(ERROR_MSG);
             }
         }
 
@@ -74,7 +75,7 @@ public class GameWithTeamsServiceImpl implements GameWithTeamsService {
             teams.add(team);
 
             if (request.isSimulateError() && i == 1) {
-                throw new RuntimeException(ERROR_MSG);
+                throw new DemoSimulatedException(ERROR_MSG);
             }
         }
 
