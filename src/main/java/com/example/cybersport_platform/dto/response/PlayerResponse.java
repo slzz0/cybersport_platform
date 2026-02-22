@@ -1,5 +1,4 @@
-package com.example.cybersport_platform.dto;
-
+package com.example.cybersport_platform.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,10 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlayerDto {
+public class PlayerResponse {
     private Long id;
     private String nickname;
-    private String team;
-    private String game;
     private Integer elo;
+    private Long teamId;
+    private String teamName;
 }
