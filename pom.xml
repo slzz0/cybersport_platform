@@ -103,6 +103,13 @@
 				</configuration>
 			</plugin>
 
+			<!-- JXR plugin for source cross-reference -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>3.6.0</version>
+			</plugin>
+
 			<!-- Spring Boot -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
