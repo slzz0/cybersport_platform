@@ -1,6 +1,5 @@
 package com.example.cybersport_platform.dto.request;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema
 public class MatchRequest {
     private Long tournamentId;
     private Long team1Id;
