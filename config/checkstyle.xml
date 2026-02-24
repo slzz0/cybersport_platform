@@ -27,6 +27,11 @@
         <module name="GenericWhitespace"/>
         <module name="NoWhitespaceBefore"/>
 
+        <!-- ВСТАВЬ ВОТ СЮДА -->
+        <module name="ParenPad">
+            <property name="option" value="nospace"/>
+        </module>
+
         <!-- Blocks -->
         <module name="LeftCurly"/>
         <module name="RightCurly"/>
@@ -53,6 +58,12 @@
         <property name="max" value="120"/>
         <property name="ignorePattern"
                   value="^package.*|^import.*|a href|href|https://|https://|ftp://"/>
+    </module>
+
+    <!-- Trailing whitespace -->
+    <module name="RegexpSingleline">
+        <property name="format" value="\s+$"/>
+        <property name="message" value="Trailing whitespace"/>
     </module>
 
     <!-- File-level checks -->
