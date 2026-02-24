@@ -32,3 +32,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### User requested to ignore ###
+.gitattributes
+mvnw
+mvnw.cmd
