@@ -30,7 +30,8 @@ public class TournamentServiceImpl implements TournamentService {
         tournament.setEndDate(request.getEndDate());
         tournament.setPrizePool(request.getPrizePool());
         if (request.getGameId() != null) {
-            gameRepository.findById(request.getGameId()).ifPresent(tournament::setGame);
+            tournament.setGame(gameRepository.findById(request.getGameId())
+                    .orElseThrow(() -> new NotFoundException("Game not found: " + request.getGameId())));
         }
         return TournamentMapper.toResponse(tournamentRepository.save(tournament));
     }
@@ -45,8 +46,8 @@ public class TournamentServiceImpl implements TournamentService {
         existing.setEndDate(request.getEndDate());
         existing.setPrizePool(request.getPrizePool());
         if (request.getGameId() != null) {
-            gameRepository.findById(request.getGameId())
-                    .ifPresentOrElse(existing::setGame, () -> existing.setGame(null));
+            existing.setGame(gameRepository.findById(request.getGameId())
+                    .orElseThrow(() -> new NotFoundException("Game not found: " + request.getGameId())));
         } else {
             existing.setGame(null);
         }

@@ -27,7 +27,8 @@ public class TeamServiceImpl implements TeamService {
         Team team = new Team();
         team.setName(request.getName());
         if (request.getGameId() != null) {
-            gameRepository.findById(request.getGameId()).ifPresent(team::setGame);
+            team.setGame(gameRepository.findById(request.getGameId())
+                    .orElseThrow(() -> new NotFoundException("Game not found: " + request.getGameId())));
         }
         return TeamMapper.toResponse(teamRepository.save(team));
     }
@@ -39,8 +40,8 @@ public class TeamServiceImpl implements TeamService {
                 .orElseThrow(() -> new NotFoundException("Team not found: " + id));
         existing.setName(request.getName());
         if (request.getGameId() != null) {
-            gameRepository.findById(request.getGameId())
-                    .ifPresentOrElse(existing::setGame, () -> existing.setGame(null));
+            existing.setGame(gameRepository.findById(request.getGameId())
+                    .orElseThrow(() -> new NotFoundException("Game not found: " + request.getGameId())));
         } else {
             existing.setGame(null);
         }

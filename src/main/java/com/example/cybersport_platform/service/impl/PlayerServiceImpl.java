@@ -29,7 +29,8 @@ public class PlayerServiceImpl implements PlayerService {
         player.setNickname(request.getNickname());
         player.setElo(request.getElo());
         if (request.getTeamId() != null) {
-            teamRepository.findById(request.getTeamId()).ifPresent(player::setTeam);
+            player.setTeam(teamRepository.findById(request.getTeamId())
+                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeamId())));
         }
         return PlayerMapper.toResponse(playerRepository.save(player));
     }
@@ -42,8 +43,8 @@ public class PlayerServiceImpl implements PlayerService {
         existing.setNickname(request.getNickname());
         existing.setElo(request.getElo());
         if (request.getTeamId() != null) {
-            teamRepository.findById(request.getTeamId())
-                    .ifPresentOrElse(existing::setTeam, () -> existing.setTeam(null));
+            existing.setTeam(teamRepository.findById(request.getTeamId())
+                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeamId())));
         } else {
             existing.setTeam(null);
         }

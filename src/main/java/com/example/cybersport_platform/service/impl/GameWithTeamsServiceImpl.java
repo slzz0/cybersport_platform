@@ -1,7 +1,6 @@
 package com.example.cybersport_platform.service.impl;
 
 import com.example.cybersport_platform.dto.request.GameWithTeamsRequest;
-import com.example.cybersport_platform.exception.DemoSimulatedException;
 import com.example.cybersport_platform.model.Game;
 import com.example.cybersport_platform.model.Player;
 import com.example.cybersport_platform.model.Team;
@@ -23,8 +22,6 @@ public class GameWithTeamsServiceImpl implements GameWithTeamsService {
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
     private final PlayerRepository playerRepository;
-
-    private static final String ERROR_MSG = "Имитация ошибки после сохранения второй команды (демо транзакций)";
 
     @Override
     public void saveGameWithTeamsAndPlayersNonTransactional(GameWithTeamsRequest request) {
@@ -50,17 +47,21 @@ public class GameWithTeamsServiceImpl implements GameWithTeamsService {
             team.setGame(game);
             team = teamRepository.save(team);
             teams.add(team);
-
-            if (request.isSimulateError() && i == 1) {
-                throw new DemoSimulatedException(ERROR_MSG);
-            }
         }
 
-        for (Team t : teams) {
+        for (int i = 0; i < teams.size(); i++) {
+            Team t = teams.get(i);
             Player player = new Player();
             player.setNickname("player_" + t.getName());
             player.setElo(1000);
-            player.setTeam(t);
+            if (request.getTeamId() != null && i == 1) {
+                Team teamForError = teamRepository.findById(request.getTeamId())
+                        .orElseThrow(() -> new IllegalStateException(
+                                "Team not found for id: " + request.getTeamId()));
+                player.setTeam(teamForError);
+            } else {
+                player.setTeam(t);
+            }
             playerRepository.save(player);
         }
     }

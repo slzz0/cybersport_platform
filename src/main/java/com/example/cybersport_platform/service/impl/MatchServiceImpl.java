@@ -31,13 +31,16 @@ public class MatchServiceImpl implements MatchService {
         match.setScoreTeam2(request.getScoreTeam2());
         match.setPlayedAt(request.getPlayedAt());
         if (request.getTournamentId() != null) {
-            tournamentRepository.findById(request.getTournamentId()).ifPresent(match::setTournament);
+            match.setTournament(tournamentRepository.findById(request.getTournamentId())
+                    .orElseThrow(() -> new NotFoundException("Tournament not found: " + request.getTournamentId())));
         }
         if (request.getTeam1Id() != null) {
-            teamRepository.findById(request.getTeam1Id()).ifPresent(match::setTeam1);
+            match.setTeam1(teamRepository.findById(request.getTeam1Id())
+                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeam1Id())));
         }
         if (request.getTeam2Id() != null) {
-            teamRepository.findById(request.getTeam2Id()).ifPresent(match::setTeam2);
+            match.setTeam2(teamRepository.findById(request.getTeam2Id())
+                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeam2Id())));
         }
         return MatchMapper.toResponse(matchRepository.save(match));
     }
@@ -51,16 +54,22 @@ public class MatchServiceImpl implements MatchService {
         existing.setScoreTeam2(request.getScoreTeam2());
         existing.setPlayedAt(request.getPlayedAt());
         if (request.getTournamentId() != null) {
-            tournamentRepository.findById(request.getTournamentId())
-                    .ifPresentOrElse(existing::setTournament, () -> existing.setTournament(null));
+            existing.setTournament(tournamentRepository.findById(request.getTournamentId())
+                    .orElseThrow(() -> new NotFoundException("Tournament not found: " + request.getTournamentId())));
+        } else {
+            existing.setTournament(null);
         }
         if (request.getTeam1Id() != null) {
-            teamRepository.findById(request.getTeam1Id())
-                    .ifPresentOrElse(existing::setTeam1, () -> existing.setTeam1(null));
+            existing.setTeam1(teamRepository.findById(request.getTeam1Id())
+                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeam1Id())));
+        } else {
+            existing.setTeam1(null);
         }
         if (request.getTeam2Id() != null) {
-            teamRepository.findById(request.getTeam2Id())
-                    .ifPresentOrElse(existing::setTeam2, () -> existing.setTeam2(null));
+            existing.setTeam2(teamRepository.findById(request.getTeam2Id())
+                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeam2Id())));
+        } else {
+            existing.setTeam2(null);
         }
         return MatchMapper.toResponse(matchRepository.save(existing));
     }

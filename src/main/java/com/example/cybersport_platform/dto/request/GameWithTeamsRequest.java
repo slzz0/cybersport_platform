@@ -15,5 +15,5 @@ public class GameWithTeamsRequest {
     private String gameName;
     private String gameDescription;
     private List<String> teamNames;
-    private boolean simulateError;
+    private Long teamId;
 }
