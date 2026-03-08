@@ -19,6 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchServiceImpl implements MatchService {
 
+    private static final String TEAM_NOT_FOUND_MESSAGE = "Team not found: ";
+
     private final MatchRepository matchRepository;
     private final TournamentRepository tournamentRepository;
     private final TeamRepository teamRepository;
@@ -36,11 +38,11 @@ public class MatchServiceImpl implements MatchService {
         }
         if (request.getTeam1Id() != null) {
             match.setTeam1(teamRepository.findById(request.getTeam1Id())
-                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeam1Id())));
+                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + request.getTeam1Id())));
         }
         if (request.getTeam2Id() != null) {
             match.setTeam2(teamRepository.findById(request.getTeam2Id())
-                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeam2Id())));
+                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + request.getTeam2Id())));
         }
         return MatchMapper.toResponse(matchRepository.save(match));
     }
@@ -61,13 +63,13 @@ public class MatchServiceImpl implements MatchService {
         }
         if (request.getTeam1Id() != null) {
             existing.setTeam1(teamRepository.findById(request.getTeam1Id())
-                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeam1Id())));
+                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + request.getTeam1Id())));
         } else {
             existing.setTeam1(null);
         }
         if (request.getTeam2Id() != null) {
             existing.setTeam2(teamRepository.findById(request.getTeam2Id())
-                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeam2Id())));
+                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + request.getTeam2Id())));
         } else {
             existing.setTeam2(null);
         }
