@@ -8,4 +8,6 @@ import java.util.List;
 public interface MatchRepository extends JpaRepository<Match, Long> {
 
     List<Match> findByTournamentId(Long tournamentId);
+
+    void deleteByTeam1IdOrTeam2Id(Long team1Id, Long team2Id);
 }

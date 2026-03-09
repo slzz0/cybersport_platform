@@ -6,6 +6,7 @@ import com.example.cybersport_platform.exception.NotFoundException;
 import com.example.cybersport_platform.mapper.TeamMapper;
 import com.example.cybersport_platform.model.Team;
 import com.example.cybersport_platform.repository.GameRepository;
+import com.example.cybersport_platform.repository.MatchRepository;
 import com.example.cybersport_platform.repository.TeamRepository;
 import com.example.cybersport_platform.service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
     private final GameRepository gameRepository;
+    private final MatchRepository matchRepository;
 
     @Override
     @Transactional
@@ -78,9 +80,16 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional
     public void delete(Long id) {
-        if (!teamRepository.existsById(id)) {
-            throw new NotFoundException("Team not found: " + id);
-        }
-        teamRepository.deleteById(id);
+        Team team = teamRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Team not found: " + id));
+
+        // Remove matches where team participates as team1/team2 to avoid FK violations.
+        matchRepository.deleteByTeam1IdOrTeam2Id(id, id);
+
+        // Clear many-to-many links from both sides before deleting team.
+        team.getTournaments().forEach(tournament -> tournament.getTeams().remove(team));
+        team.getTournaments().clear();
+
+        teamRepository.delete(team);
     }
 }

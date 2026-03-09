@@ -55,9 +55,13 @@ public class GameServiceImpl implements GameService {
     @Override
     @Transactional
     public void delete(Long id) {
-        if (!gameRepository.existsById(id)) {
-            throw new NotFoundException("Game not found: " + id);
-        }
-        gameRepository.deleteById(id);
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Game not found: " + id));
+
+        // Break FK links from teams and tournaments to this game before delete.
+        game.getTeams().forEach(team -> team.setGame(null));
+        game.getTournaments().forEach(tournament -> tournament.setGame(null));
+
+        gameRepository.delete(game);
     }
 }

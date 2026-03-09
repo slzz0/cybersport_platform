@@ -84,9 +84,13 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     @Transactional
     public void delete(Long id) {
-        if (!tournamentRepository.existsById(id)) {
-            throw new NotFoundException("Tournament not found: " + id);
-        }
-        tournamentRepository.deleteById(id);
+        Tournament tournament = tournamentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Tournament not found: " + id));
+
+        // Remove many-to-many join rows from both sides before deleting tournament.
+        tournament.getTeams().forEach(team -> team.getTournaments().remove(tournament));
+        tournament.getTeams().clear();
+
+        tournamentRepository.delete(tournament);
     }
 }

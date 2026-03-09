@@ -37,6 +37,13 @@ public class Team {
 
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Player> players = new ArrayList<>();
+
+    @OneToMany(mappedBy = "team1", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Match> matchesAsTeam1 = new ArrayList<>();
+
+    @OneToMany(mappedBy = "team2", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Match> matchesAsTeam2 = new ArrayList<>();
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "tournament_team",
