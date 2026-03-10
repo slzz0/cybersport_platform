@@ -18,6 +18,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TournamentServiceImpl implements TournamentService {
 
+    private static final String TOURNAMENT_NOT_FOUND_MESSAGE = "Tournament not found: ";
+    private static final String GAME_NOT_FOUND_MESSAGE = "Game not found: ";
+
     private final TournamentRepository tournamentRepository;
     private final GameRepository gameRepository;
 
@@ -31,7 +34,7 @@ public class TournamentServiceImpl implements TournamentService {
         tournament.setPrizePool(request.getPrizePool());
         if (request.getGameId() != null) {
             tournament.setGame(gameRepository.findById(request.getGameId())
-                    .orElseThrow(() -> new NotFoundException("Game not found: " + request.getGameId())));
+                    .orElseThrow(() -> new NotFoundException(GAME_NOT_FOUND_MESSAGE + request.getGameId())));
         }
         return TournamentMapper.toResponse(tournamentRepository.save(tournament));
     }
@@ -40,14 +43,14 @@ public class TournamentServiceImpl implements TournamentService {
     @Transactional
     public TournamentResponse update(Long id, TournamentRequest request) {
         Tournament existing = tournamentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Tournament not found: " + id));
+                .orElseThrow(() -> new NotFoundException(TOURNAMENT_NOT_FOUND_MESSAGE + id));
         existing.setName(request.getName());
         existing.setStartDate(request.getStartDate());
         existing.setEndDate(request.getEndDate());
         existing.setPrizePool(request.getPrizePool());
         if (request.getGameId() != null) {
             existing.setGame(gameRepository.findById(request.getGameId())
-                    .orElseThrow(() -> new NotFoundException("Game not found: " + request.getGameId())));
+                    .orElseThrow(() -> new NotFoundException(GAME_NOT_FOUND_MESSAGE + request.getGameId())));
         } else {
             existing.setGame(null);
         }
@@ -59,7 +62,7 @@ public class TournamentServiceImpl implements TournamentService {
     public TournamentResponse getById(Long id) {
         return tournamentRepository.findById(id)
                 .map(TournamentMapper::toResponse)
-                .orElseThrow(() -> new NotFoundException("Tournament not found: " + id));
+                .orElseThrow(() -> new NotFoundException(TOURNAMENT_NOT_FOUND_MESSAGE + id));
     }
 
     @Override
@@ -85,7 +88,7 @@ public class TournamentServiceImpl implements TournamentService {
     @Transactional
     public void delete(Long id) {
         Tournament tournament = tournamentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Tournament not found: " + id));
+                .orElseThrow(() -> new NotFoundException(TOURNAMENT_NOT_FOUND_MESSAGE + id));
 
         // Remove many-to-many join rows from both sides before deleting tournament.
         tournament.getTeams().forEach(team -> team.getTournaments().remove(tournament));

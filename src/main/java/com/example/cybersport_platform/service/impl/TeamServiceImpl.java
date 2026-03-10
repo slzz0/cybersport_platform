@@ -19,6 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TeamServiceImpl implements TeamService {
 
+    private static final String TEAM_NOT_FOUND_MESSAGE = "Team not found: ";
+    private static final String GAME_NOT_FOUND_MESSAGE = "Game not found: ";
+
     private final TeamRepository teamRepository;
     private final GameRepository gameRepository;
     private final MatchRepository matchRepository;
@@ -30,7 +33,7 @@ public class TeamServiceImpl implements TeamService {
         team.setName(request.getName());
         if (request.getGameId() != null) {
             team.setGame(gameRepository.findById(request.getGameId())
-                    .orElseThrow(() -> new NotFoundException("Game not found: " + request.getGameId())));
+                    .orElseThrow(() -> new NotFoundException(GAME_NOT_FOUND_MESSAGE + request.getGameId())));
         }
         return TeamMapper.toResponse(teamRepository.save(team));
     }
@@ -39,11 +42,11 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     public TeamResponse update(Long id, TeamRequest request) {
         Team existing = teamRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Team not found: " + id));
+                .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + id));
         existing.setName(request.getName());
         if (request.getGameId() != null) {
             existing.setGame(gameRepository.findById(request.getGameId())
-                    .orElseThrow(() -> new NotFoundException("Game not found: " + request.getGameId())));
+                    .orElseThrow(() -> new NotFoundException(GAME_NOT_FOUND_MESSAGE + request.getGameId())));
         } else {
             existing.setGame(null);
         }
@@ -55,7 +58,7 @@ public class TeamServiceImpl implements TeamService {
     public TeamResponse getById(Long id) {
         return teamRepository.findById(id)
                 .map(TeamMapper::toResponse)
-                .orElseThrow(() -> new NotFoundException("Team not found: " + id));
+                .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + id));
     }
 
     @Override
@@ -81,7 +84,7 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     public void delete(Long id) {
         Team team = teamRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Team not found: " + id));
+                .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + id));
 
         // Remove matches where team participates as team1/team2 to avoid FK violations.
         matchRepository.deleteByTeam1IdOrTeam2Id(id, id);

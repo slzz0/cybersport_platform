@@ -23,6 +23,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class GameServiceImpl implements GameService {
 
+    private static final String GAME_NOT_FOUND_MESSAGE = "Game not found: ";
+
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
     private final TournamentRepository tournamentRepository;
@@ -41,7 +43,7 @@ public class GameServiceImpl implements GameService {
     @Transactional
     public GameResponse update(Long id, GameRequest request) {
         Game existing = gameRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Game not found: " + id));
+                .orElseThrow(() -> new NotFoundException(GAME_NOT_FOUND_MESSAGE + id));
         existing.setName(request.getName());
         existing.setDescription(request.getDescription());
         return GameMapper.toResponse(gameRepository.save(existing));
@@ -51,7 +53,7 @@ public class GameServiceImpl implements GameService {
     public GameResponse getById(Long id) {
         return gameRepository.findById(id)
                 .map(GameMapper::toResponse)
-                .orElseThrow(() -> new NotFoundException("Game not found: " + id));
+                .orElseThrow(() -> new NotFoundException(GAME_NOT_FOUND_MESSAGE + id));
     }
 
     @Override
@@ -65,7 +67,7 @@ public class GameServiceImpl implements GameService {
     @Transactional
     public void delete(Long id) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Game not found: " + id));
+                .orElseThrow(() -> new NotFoundException(GAME_NOT_FOUND_MESSAGE + id));
 
         List<Team> teams = teamRepository.findByGameId(id);
         List<Tournament> tournaments = tournamentRepository.findByGameId(id);
