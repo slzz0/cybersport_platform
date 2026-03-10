@@ -5,6 +5,7 @@ import com.example.cybersport_platform.dto.response.PlayerResponse;
 import com.example.cybersport_platform.exception.NotFoundException;
 import com.example.cybersport_platform.mapper.PlayerMapper;
 import com.example.cybersport_platform.model.Player;
+import com.example.cybersport_platform.repository.GameRepository;
 import com.example.cybersport_platform.repository.PlayerRepository;
 import com.example.cybersport_platform.repository.TeamRepository;
 import com.example.cybersport_platform.service.PlayerService;
@@ -19,8 +20,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
 
+    private static final String PLAYER_NOT_FOUND_MESSAGE = "Player not found: ";
+    private static final String TEAM_NOT_FOUND_MESSAGE = "Team not found: ";
+    private static final String GAME_NOT_FOUND_MESSAGE = "Game not found: ";
+
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
+    private final GameRepository gameRepository;
 
     @Override
     @Transactional
@@ -30,7 +36,7 @@ public class PlayerServiceImpl implements PlayerService {
         player.setElo(request.getElo());
         if (request.getTeamId() != null) {
             player.setTeam(teamRepository.findById(request.getTeamId())
-                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeamId())));
+                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + request.getTeamId())));
         }
         return PlayerMapper.toResponse(playerRepository.save(player));
     }
@@ -39,12 +45,12 @@ public class PlayerServiceImpl implements PlayerService {
     @Transactional
     public PlayerResponse update(Long id, PlayerRequest request) {
         Player existing = playerRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Player not found: " + id));
+                .orElseThrow(() -> new NotFoundException(PLAYER_NOT_FOUND_MESSAGE + id));
         existing.setNickname(request.getNickname());
         existing.setElo(request.getElo());
         if (request.getTeamId() != null) {
             existing.setTeam(teamRepository.findById(request.getTeamId())
-                    .orElseThrow(() -> new NotFoundException("Team not found: " + request.getTeamId())));
+                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + request.getTeamId())));
         } else {
             existing.setTeam(null);
         }
@@ -56,7 +62,7 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerResponse getById(Long id) {
         return playerRepository.findById(id)
                 .map(PlayerMapper::toResponse)
-                .orElseThrow(() -> new NotFoundException("Player not found: " + id));
+                .orElseThrow(() -> new NotFoundException(PLAYER_NOT_FOUND_MESSAGE + id));
     }
 
     @Override
@@ -73,6 +79,9 @@ public class PlayerServiceImpl implements PlayerService {
         if (teamId == null) {
             return Collections.emptyList();
         }
+        if (!teamRepository.existsById(teamId)) {
+            throw new NotFoundException(TEAM_NOT_FOUND_MESSAGE + teamId);
+        }
         return playerRepository.findByTeamId(teamId).stream()
                 .map(PlayerMapper::toResponse)
                 .toList();
@@ -83,6 +92,9 @@ public class PlayerServiceImpl implements PlayerService {
     public List<PlayerResponse> getByGameId(Long gameId) {
         if (gameId == null) {
             return Collections.emptyList();
+        }
+        if (!gameRepository.existsById(gameId)) {
+            throw new NotFoundException(GAME_NOT_FOUND_MESSAGE + gameId);
         }
         // fetch join — один запрос вместо N+1 при маппинге (getTeam().getName())
         return playerRepository.findByTeamGameIdWithTeam(gameId).stream()
@@ -105,7 +117,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Transactional
     public void delete(Long id) {
         if (!playerRepository.existsById(id)) {
-            throw new NotFoundException("Player not found: " + id);
+            throw new NotFoundException(PLAYER_NOT_FOUND_MESSAGE + id);
         }
         playerRepository.deleteById(id);
     }

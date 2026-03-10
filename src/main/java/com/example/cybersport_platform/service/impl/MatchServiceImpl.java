@@ -19,7 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchServiceImpl implements MatchService {
 
+    private static final String MATCH_NOT_FOUND_MESSAGE = "Match not found: ";
     private static final String TEAM_NOT_FOUND_MESSAGE = "Team not found: ";
+    private static final String TOURNAMENT_NOT_FOUND_MESSAGE = "Tournament not found: ";
 
     private final MatchRepository matchRepository;
     private final TournamentRepository tournamentRepository;
@@ -34,7 +36,7 @@ public class MatchServiceImpl implements MatchService {
         match.setPlayedAt(request.getPlayedAt());
         if (request.getTournamentId() != null) {
             match.setTournament(tournamentRepository.findById(request.getTournamentId())
-                    .orElseThrow(() -> new NotFoundException("Tournament not found: " + request.getTournamentId())));
+                    .orElseThrow(() -> new NotFoundException(TOURNAMENT_NOT_FOUND_MESSAGE + request.getTournamentId())));
         }
         if (request.getTeam1Id() != null) {
             match.setTeam1(teamRepository.findById(request.getTeam1Id())
@@ -51,13 +53,13 @@ public class MatchServiceImpl implements MatchService {
     @Transactional
     public MatchResponse update(Long id, MatchRequest request) {
         Match existing = matchRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Match not found: " + id));
+                .orElseThrow(() -> new NotFoundException(MATCH_NOT_FOUND_MESSAGE + id));
         existing.setScoreTeam1(request.getScoreTeam1());
         existing.setScoreTeam2(request.getScoreTeam2());
         existing.setPlayedAt(request.getPlayedAt());
         if (request.getTournamentId() != null) {
             existing.setTournament(tournamentRepository.findById(request.getTournamentId())
-                    .orElseThrow(() -> new NotFoundException("Tournament not found: " + request.getTournamentId())));
+                    .orElseThrow(() -> new NotFoundException(TOURNAMENT_NOT_FOUND_MESSAGE + request.getTournamentId())));
         } else {
             existing.setTournament(null);
         }
@@ -81,7 +83,7 @@ public class MatchServiceImpl implements MatchService {
     public MatchResponse getById(Long id) {
         return matchRepository.findById(id)
                 .map(MatchMapper::toResponse)
-                .orElseThrow(() -> new NotFoundException("Match not found: " + id));
+                .orElseThrow(() -> new NotFoundException(MATCH_NOT_FOUND_MESSAGE + id));
     }
 
     @Override
@@ -98,6 +100,9 @@ public class MatchServiceImpl implements MatchService {
         if (tournamentId == null) {
             return List.of();
         }
+        if (!tournamentRepository.existsById(tournamentId)) {
+            throw new NotFoundException(TOURNAMENT_NOT_FOUND_MESSAGE + tournamentId);
+        }
         return matchRepository.findByTournamentId(tournamentId).stream()
                 .map(MatchMapper::toResponse)
                 .toList();
@@ -107,7 +112,7 @@ public class MatchServiceImpl implements MatchService {
     @Transactional
     public void delete(Long id) {
         if (!matchRepository.existsById(id)) {
-            throw new NotFoundException("Match not found: " + id);
+            throw new NotFoundException(MATCH_NOT_FOUND_MESSAGE + id);
         }
         matchRepository.deleteById(id);
     }

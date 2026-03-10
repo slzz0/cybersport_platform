@@ -75,6 +75,9 @@ public class TeamServiceImpl implements TeamService {
         if (gameId == null) {
             return List.of();
         }
+        if (!gameRepository.existsById(gameId)) {
+            throw new NotFoundException(GAME_NOT_FOUND_MESSAGE + gameId);
+        }
         return teamRepository.findByGameId(gameId).stream()
                 .map(TeamMapper::toResponse)
                 .toList();

@@ -79,6 +79,9 @@ public class TournamentServiceImpl implements TournamentService {
         if (gameId == null) {
             return List.of();
         }
+        if (!gameRepository.existsById(gameId)) {
+            throw new NotFoundException(GAME_NOT_FOUND_MESSAGE + gameId);
+        }
         return tournamentRepository.findByGameId(gameId).stream()
                 .map(TournamentMapper::toResponse)
                 .toList();
