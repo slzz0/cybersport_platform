@@ -21,10 +21,10 @@ public class GameWithTeamsController {
     @PostMapping("/non-transactional")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Success"),
-        @ApiResponse(responseCode = "500", description = "Error occurred; partial save remains (game and 2 teams)")
+        @ApiResponse(responseCode = "500", description = "Error occurred; game and teams remain saved")
     })
     public ResponseEntity<Void> saveNonTransactional(@RequestBody GameWithTeamsRequest request) {
-        gameWithTeamsService.saveGameWithTeamsAndPlayersNonTransactional(request);
+        gameWithTeamsService.saveGameWithTeamsNonTransactional(request);
         return ResponseEntity.ok().build();
     }
 
@@ -34,7 +34,7 @@ public class GameWithTeamsController {
         @ApiResponse(responseCode = "500", description = "Error occurred; full rollback")
     })
     public ResponseEntity<Void> saveTransactional(@RequestBody GameWithTeamsRequest request) {
-        gameWithTeamsService.saveGameWithTeamsAndPlayersTransactional(request);
+        gameWithTeamsService.saveGameWithTeamsTransactional(request);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,0 +1,750 @@
+{
+  "info": {
+    "_postman_id": "5ff4f340-6178-4d3e-a470-cf3938cb7c98",
+    "name": "Cybersport Platform API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for the cybersport_platform REST API."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "gameId",
+      "value": "1"
+    },
+    {
+      "key": "teamId",
+      "value": "1"
+    },
+    {
+      "key": "playerId",
+      "value": "1"
+    },
+    {
+      "key": "matchId",
+      "value": "1"
+    },
+    {
+      "key": "tournamentId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Games",
+      "item": [
+        {
+          "name": "Create game",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Counter-Strike 2\",\n  \"description\": \"5v5 tactical shooter\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/games",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "games"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get all games",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/games",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "games"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get game by id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/games/{{gameId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "games",
+                "{{gameId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update game",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Counter-Strike 2\",\n  \"description\": \"Updated description\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/games/{{gameId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "games",
+                "{{gameId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete game",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/games/{{gameId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "games",
+                "{{gameId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teams",
+      "item": [
+        {
+          "name": "Create team",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Natus Vincere\",\n  \"gameId\": {{gameId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/teams",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "teams"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get all teams",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/teams",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "teams"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get team by id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/teams/{{teamId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "teams",
+                "{{teamId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get teams by game id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/teams/game/{{gameId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "teams",
+                "game",
+                "{{gameId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update team",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Team Spirit\",\n  \"gameId\": {{gameId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/teams/{{teamId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "teams",
+                "{{teamId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete team",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/teams/{{teamId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "teams",
+                "{{teamId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Players",
+      "item": [
+        {
+          "name": "Create player",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nickname\": \"s1mple\",\n  \"elo\": 2900,\n  \"teamId\": {{teamId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/players",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "players"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get all players",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/players",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "players"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get player by id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/players/{{playerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "players",
+                "{{playerId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search player by nickname",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/players/search?nickname=s1mple",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "players",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "nickname",
+                  "value": "s1mple"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get players by team id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/players/team/{{teamId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "players",
+                "team",
+                "{{teamId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get players by game id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/players/game/{{gameId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "players",
+                "game",
+                "{{gameId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update player",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nickname\": \"donk\",\n  \"elo\": 3000,\n  \"teamId\": {{teamId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/players/{{playerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "players",
+                "{{playerId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete player",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/players/{{playerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "players",
+                "{{playerId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Matches",
+      "item": [
+        {
+          "name": "Create match",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentId}},\n  \"team1Id\": 1,\n  \"team2Id\": 2,\n  \"scoreTeam1\": 2,\n  \"scoreTeam2\": 1,\n  \"playedAt\": \"2026-03-10T18:30:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/matches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "matches"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get all matches",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/matches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "matches"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get match by id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/matches/{{matchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "matches",
+                "{{matchId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get matches by tournament id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/matches/tournament/{{tournamentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "matches",
+                "tournament",
+                "{{tournamentId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update match",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tournamentId\": {{tournamentId}},\n  \"team1Id\": 1,\n  \"team2Id\": 2,\n  \"scoreTeam1\": 2,\n  \"scoreTeam2\": 0,\n  \"playedAt\": \"2026-03-11T20:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/matches/{{matchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "matches",
+                "{{matchId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete match",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/matches/{{matchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "matches",
+                "{{matchId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tournaments",
+      "item": [
+        {
+          "name": "Create tournament",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"PGL Major\",\n  \"startDate\": \"2026-05-01\",\n  \"endDate\": \"2026-05-20\",\n  \"prizePool\": \"$1,250,000\",\n  \"gameId\": {{gameId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tournaments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tournaments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get all tournaments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/tournaments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tournaments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get tournament by id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/tournaments/{{tournamentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tournaments",
+                "{{tournamentId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get tournaments by game id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/tournaments/game/{{gameId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tournaments",
+                "game",
+                "{{gameId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update tournament",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"BLAST Premier\",\n  \"startDate\": \"2026-06-01\",\n  \"endDate\": \"2026-06-10\",\n  \"prizePool\": \"$500,000\",\n  \"gameId\": {{gameId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tournaments/{{tournamentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tournaments",
+                "{{tournamentId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete tournament",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/tournaments/{{tournamentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tournaments",
+                "{{tournamentId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Game With Teams",
+      "item": [
+        {
+          "name": "Save non-transactional",
+          "request": {
+            "method": "POST",
+            "description": "Creates a game and its teams. If teamId does not exist, the request fails after saves, so partial data remains in non-transactional mode.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gameName\": \"Dota 2\",\n  \"gameDescription\": \"MOBA\",\n  \"teamNames\": [\n    \"Team Spirit\",\n    \"BetBoom Team\",\n    \"Tundra Esports\"\n  ],\n  \"teamId\": {{teamId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/game-with-teams/non-transactional",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "game-with-teams",
+                "non-transactional"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Save transactional",
+          "request": {
+            "method": "POST",
+            "description": "Creates a game and its teams. If teamId does not exist, the request fails and the whole transaction is rolled back.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gameName\": \"League of Legends\",\n  \"gameDescription\": \"5v5 MOBA\",\n  \"teamNames\": [\n    \"T1\",\n    \"Gen.G\",\n    \"G2 Esports\"\n  ],\n  \"teamId\": {{teamId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/game-with-teams/transactional",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "game-with-teams",
+                "transactional"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
