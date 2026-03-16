@@ -1,5 +1,6 @@
 package com.example.cybersport_platform.service.impl;
 
+import com.example.cybersport_platform.cache.MatchSearchIndex;
 import com.example.cybersport_platform.dto.request.TeamRequest;
 import com.example.cybersport_platform.dto.response.TeamResponse;
 import com.example.cybersport_platform.exception.NotFoundException;
@@ -25,6 +26,7 @@ public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
     private final GameRepository gameRepository;
     private final MatchRepository matchRepository;
+    private final MatchSearchIndex matchSearchIndex;
 
     @Override
     @Transactional
@@ -35,7 +37,9 @@ public class TeamServiceImpl implements TeamService {
             team.setGame(gameRepository.findById(request.getGameId())
                     .orElseThrow(() -> new NotFoundException(GAME_NOT_FOUND_MESSAGE + request.getGameId())));
         }
-        return TeamMapper.toResponse(teamRepository.save(team));
+        TeamResponse response = TeamMapper.toResponse(teamRepository.save(team));
+        matchSearchIndex.invalidateAll();
+        return response;
     }
 
     @Override
@@ -50,7 +54,9 @@ public class TeamServiceImpl implements TeamService {
         } else {
             existing.setGame(null);
         }
-        return TeamMapper.toResponse(teamRepository.save(existing));
+        TeamResponse response = TeamMapper.toResponse(teamRepository.save(existing));
+        matchSearchIndex.invalidateAll();
+        return response;
     }
 
     @Override
@@ -97,5 +103,6 @@ public class TeamServiceImpl implements TeamService {
         team.getTournaments().clear();
 
         teamRepository.delete(team);
+        matchSearchIndex.invalidateAll();
     }
 }

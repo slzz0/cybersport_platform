@@ -1,5 +1,6 @@
 package com.example.cybersport_platform.service.impl;
 
+import com.example.cybersport_platform.cache.MatchSearchIndex;
 import com.example.cybersport_platform.dto.request.GameWithTeamsRequest;
 import com.example.cybersport_platform.model.Game;
 import com.example.cybersport_platform.model.Team;
@@ -16,6 +17,7 @@ public class GameWithTeamsServiceImpl implements GameWithTeamsService {
 
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
+    private final MatchSearchIndex matchSearchIndex;
 
     @Override
     public void saveGameWithTeamsNonTransactional(GameWithTeamsRequest request) {
@@ -46,5 +48,6 @@ public class GameWithTeamsServiceImpl implements GameWithTeamsService {
                     .orElseThrow(() -> new IllegalStateException(
                             "Team not found for id: " + request.getTeamId()));
         }
+        matchSearchIndex.invalidateAll();
     }
 }

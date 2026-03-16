@@ -1,5 +1,6 @@
 package com.example.cybersport_platform.service.impl;
 
+import com.example.cybersport_platform.cache.MatchSearchIndex;
 import com.example.cybersport_platform.dto.request.GameRequest;
 import com.example.cybersport_platform.dto.response.GameResponse;
 import com.example.cybersport_platform.exception.NotFoundException;
@@ -29,6 +30,7 @@ public class GameServiceImpl implements GameService {
     private final TeamRepository teamRepository;
     private final TournamentRepository tournamentRepository;
     private final MatchRepository matchRepository;
+    private final MatchSearchIndex matchSearchIndex;
 
     @Override
     @Transactional
@@ -36,7 +38,9 @@ public class GameServiceImpl implements GameService {
         Game game = new Game();
         game.setName(request.getName());
         game.setDescription(request.getDescription());
-        return GameMapper.toResponse(gameRepository.save(game));
+        GameResponse response = GameMapper.toResponse(gameRepository.save(game));
+        matchSearchIndex.invalidateAll();
+        return response;
     }
 
     @Override
@@ -46,7 +50,9 @@ public class GameServiceImpl implements GameService {
                 .orElseThrow(() -> new NotFoundException(GAME_NOT_FOUND_MESSAGE + id));
         existing.setName(request.getName());
         existing.setDescription(request.getDescription());
-        return GameMapper.toResponse(gameRepository.save(existing));
+        GameResponse response = GameMapper.toResponse(gameRepository.save(existing));
+        matchSearchIndex.invalidateAll();
+        return response;
     }
 
     @Override
@@ -100,5 +106,6 @@ public class GameServiceImpl implements GameService {
         teamRepository.deleteAll(teams);
 
         gameRepository.delete(game);
+        matchSearchIndex.invalidateAll();
     }
 }
