@@ -13,15 +13,17 @@ import com.example.cybersport_platform.repository.TournamentRepository;
 import com.example.cybersport_platform.service.MatchSearchQueryType;
 import com.example.cybersport_platform.service.MatchService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MatchServiceImpl implements MatchService {
 
@@ -56,7 +58,7 @@ public class MatchServiceImpl implements MatchService {
                     .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + request.getTeam2Id())));
         }
         MatchResponse response = MatchMapper.toResponse(matchRepository.save(match));
-        matchSearchIndex.invalidateAll();
+        invalidateSearchIndex("match created");
         return response;
     }
 
@@ -87,7 +89,7 @@ public class MatchServiceImpl implements MatchService {
             existing.setTeam2(null);
         }
         MatchResponse response = MatchMapper.toResponse(matchRepository.save(existing));
-        matchSearchIndex.invalidateAll();
+        invalidateSearchIndex("match updated");
         return response;
     }
 
@@ -123,6 +125,48 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     @Transactional(readOnly = true)
+    public Page<MatchResponse> getAllPaged(Pageable pageable) {
+        return matchRepository.findAll(pageable).map(MatchMapper::toResponse);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MatchResponse> searchByFiltersJpql(
+            String gameName,
+            String tournamentName,
+            LocalDateTime playedFrom,
+            LocalDateTime playedTo
+    ) {
+        return getByFilters(
+                gameName,
+                tournamentName,
+                playedFrom,
+                playedTo,
+                Pageable.unpaged(),
+                MatchSearchQueryType.JPQL
+        ).getContent();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MatchResponse> searchByFiltersNative(
+            String gameName,
+            String tournamentName,
+            LocalDateTime playedFrom,
+            LocalDateTime playedTo
+    ) {
+        return getByFilters(
+                gameName,
+                tournamentName,
+                playedFrom,
+                playedTo,
+                Pageable.unpaged(),
+                MatchSearchQueryType.NATIVE
+        ).getContent();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Page<MatchResponse> getByFilters(
             String gameName,
             String tournamentName,
@@ -144,7 +188,28 @@ public class MatchServiceImpl implements MatchService {
                 queryType
         );
         return matchSearchIndex.get(key)
+                .map(page -> {
+                    log.debug(
+                            "Match search cache hit: queryType={}, gameName={}, tournamentName={}, playedFrom={}, playedTo={}, pageable={}",
+                            queryType,
+                            gameName,
+                            tournamentName,
+                            playedFrom,
+                            playedTo,
+                            pageable
+                    );
+                    return page;
+                })
                 .orElseGet(() -> {
+                    log.debug(
+                            "Match search cache miss: queryType={}, gameName={}, tournamentName={}, playedFrom={}, playedTo={}, pageable={}",
+                            queryType,
+                            gameName,
+                            tournamentName,
+                            playedFrom,
+                            playedTo,
+                            pageable
+                    );
                     Page<MatchResponse> page = getMatchesPageByQueryType(
                             gameNamePattern,
                             tournamentNamePattern,
@@ -154,6 +219,15 @@ public class MatchServiceImpl implements MatchService {
                             queryType
                     ).map(MatchMapper::toResponse);
                     matchSearchIndex.put(key, page);
+                    log.debug(
+                            "Match search cache store: queryType={}, gameName={}, tournamentName={}, playedFrom={}, playedTo={}, totalElements={}",
+                            queryType,
+                            gameName,
+                            tournamentName,
+                            playedFrom,
+                            playedTo,
+                            page.getTotalElements()
+                    );
                     return page;
                 });
     }
@@ -165,7 +239,7 @@ public class MatchServiceImpl implements MatchService {
             throw new NotFoundException(MATCH_NOT_FOUND_MESSAGE + id);
         }
         matchRepository.deleteById(id);
-        matchSearchIndex.invalidateAll();
+        invalidateSearchIndex("match deleted");
     }
 
     private Page<Match> getMatchesPageByQueryType(
@@ -199,5 +273,10 @@ public class MatchServiceImpl implements MatchService {
             return "%";
         }
         return "%" + value.toLowerCase() + "%";
+    }
+
+    private void invalidateSearchIndex(String reason) {
+        matchSearchIndex.invalidateAll();
+        log.debug("Match search cache invalidated: {}", reason);
     }
 }

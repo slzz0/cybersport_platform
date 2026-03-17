@@ -29,8 +29,8 @@ public class MatchSearchCacheKey {
         this.tournamentName = tournamentName;
         this.playedFrom = playedFrom;
         this.playedTo = playedTo;
-        this.page = pageable.getPageNumber();
-        this.size = pageable.getPageSize();
+        this.page = pageable.isPaged() ? pageable.getPageNumber() : -1;
+        this.size = pageable.isPaged() ? pageable.getPageSize() : -1;
         this.sort = pageable.getSort().toString();
         this.queryType = queryType;
     }

@@ -113,6 +113,57 @@ public class MatchController {
         ));
     }
 
+    @GetMapping("/search/jpql")
+    @Operation(summary = "Filter matches by nested fields using JPQL")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Matches received"),
+            @ApiResponse(responseCode = "400", description = "Invalid request")
+    })
+    public ResponseEntity<List<MatchResponse>> searchJpql(
+            @RequestParam(required = false) String gameName,
+            @RequestParam(required = false) String tournamentName,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime playedFrom,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime playedTo
+    ) {
+        return ResponseEntity.ok(service.searchByFiltersJpql(
+                gameName,
+                tournamentName,
+                playedFrom,
+                playedTo
+        ));
+    }
+
+    @GetMapping("/search/native")
+    @Operation(summary = "Filter matches by nested fields using native query")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Matches received"),
+            @ApiResponse(responseCode = "400", description = "Invalid request")
+    })
+    public ResponseEntity<List<MatchResponse>> searchNative(
+            @RequestParam(required = false) String gameName,
+            @RequestParam(required = false) String tournamentName,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime playedFrom,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime playedTo
+    ) {
+        return ResponseEntity.ok(service.searchByFiltersNative(
+                gameName,
+                tournamentName,
+                playedFrom,
+                playedTo
+        ));
+    }
+
+    @GetMapping("/page")
+    @Operation(summary = "Get matches with pagination only")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Matches received")
+    })
+    public ResponseEntity<Page<MatchResponse>> getPage(@ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(service.getAllPaged(pageable));
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete match")
     @ApiResponses(value = {
