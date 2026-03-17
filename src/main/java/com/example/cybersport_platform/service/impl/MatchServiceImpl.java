@@ -137,7 +137,7 @@ public class MatchServiceImpl implements MatchService {
             LocalDateTime playedFrom,
             LocalDateTime playedTo
     ) {
-        return getByFilters(
+        return findFilteredMatches(
                 gameName,
                 tournamentName,
                 playedFrom,
@@ -155,7 +155,7 @@ public class MatchServiceImpl implements MatchService {
             LocalDateTime playedFrom,
             LocalDateTime playedTo
     ) {
-        return getByFilters(
+        return findFilteredMatches(
                 gameName,
                 tournamentName,
                 playedFrom,
@@ -168,6 +168,24 @@ public class MatchServiceImpl implements MatchService {
     @Override
     @Transactional(readOnly = true)
     public Page<MatchResponse> getByFilters(
+            String gameName,
+            String tournamentName,
+            LocalDateTime playedFrom,
+            LocalDateTime playedTo,
+            Pageable pageable,
+            MatchSearchQueryType queryType
+    ) {
+        return findFilteredMatches(
+                gameName,
+                tournamentName,
+                playedFrom,
+                playedTo,
+                pageable,
+                queryType
+        );
+    }
+
+    private Page<MatchResponse> findFilteredMatches(
             String gameName,
             String tournamentName,
             LocalDateTime playedFrom,
