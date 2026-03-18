@@ -131,38 +131,40 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MatchResponse> searchByFiltersJpql(
+    public Page<MatchResponse> searchByFiltersJpql(
             String gameName,
             String tournamentName,
             LocalDateTime playedFrom,
-            LocalDateTime playedTo
+            LocalDateTime playedTo,
+            Pageable pageable
     ) {
         return findFilteredMatches(
                 gameName,
                 tournamentName,
                 playedFrom,
                 playedTo,
-                Pageable.unpaged(),
+                pageable,
                 MatchSearchQueryType.JPQL
-        ).getContent();
+        );
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<MatchResponse> searchByFiltersNative(
+    public Page<MatchResponse> searchByFiltersNative(
             String gameName,
             String tournamentName,
             LocalDateTime playedFrom,
-            LocalDateTime playedTo
+            LocalDateTime playedTo,
+            Pageable pageable
     ) {
         return findFilteredMatches(
                 gameName,
                 tournamentName,
                 playedFrom,
                 playedTo,
-                Pageable.unpaged(),
+                pageable,
                 MatchSearchQueryType.NATIVE
-        ).getContent();
+        );
     }
 
     @Override

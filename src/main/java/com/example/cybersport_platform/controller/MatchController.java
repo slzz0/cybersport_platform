@@ -119,18 +119,20 @@ public class MatchController {
             @ApiResponse(responseCode = "200", description = "Matches received"),
             @ApiResponse(responseCode = "400", description = "Invalid request")
     })
-    public ResponseEntity<List<MatchResponse>> searchJpql(
+    public ResponseEntity<Page<MatchResponse>> searchJpql(
             @RequestParam(required = false) String gameName,
             @RequestParam(required = false) String tournamentName,
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime playedFrom,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime playedTo
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime playedTo,
+            @ParameterObject Pageable pageable
     ) {
         return ResponseEntity.ok(service.searchByFiltersJpql(
                 gameName,
                 tournamentName,
                 playedFrom,
-                playedTo
+                playedTo,
+                pageable
         ));
     }
 
@@ -140,18 +142,20 @@ public class MatchController {
             @ApiResponse(responseCode = "200", description = "Matches received"),
             @ApiResponse(responseCode = "400", description = "Invalid request")
     })
-    public ResponseEntity<List<MatchResponse>> searchNative(
+    public ResponseEntity<Page<MatchResponse>> searchNative(
             @RequestParam(required = false) String gameName,
             @RequestParam(required = false) String tournamentName,
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime playedFrom,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime playedTo
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime playedTo,
+            @ParameterObject Pageable pageable
     ) {
         return ResponseEntity.ok(service.searchByFiltersNative(
                 gameName,
                 tournamentName,
                 playedFrom,
-                playedTo
+                playedTo,
+                pageable
         ));
     }
 

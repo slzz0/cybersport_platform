@@ -15,17 +15,19 @@ public interface MatchService {
     List<MatchResponse> getAll();
     List<MatchResponse> getByTournamentId(Long tournamentId);
     Page<MatchResponse> getAllPaged(Pageable pageable);
-    List<MatchResponse> searchByFiltersJpql(
+    Page<MatchResponse> searchByFiltersJpql(
             String gameName,
             String tournamentName,
             LocalDateTime playedFrom,
-            LocalDateTime playedTo
+            LocalDateTime playedTo,
+            Pageable pageable
     );
-    List<MatchResponse> searchByFiltersNative(
+    Page<MatchResponse> searchByFiltersNative(
             String gameName,
             String tournamentName,
             LocalDateTime playedFrom,
-            LocalDateTime playedTo
+            LocalDateTime playedTo,
+            Pageable pageable
     );
     Page<MatchResponse> getByFilters(
             String gameName,
