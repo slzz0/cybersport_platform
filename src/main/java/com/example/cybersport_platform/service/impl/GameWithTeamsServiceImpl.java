@@ -44,9 +44,9 @@ public class GameWithTeamsServiceImpl implements GameWithTeamsService {
         }
 
         if (request.getTeamId() != null) {
-            teamRepository.findById(request.getTeamId())
-                    .orElseThrow(() -> new IllegalStateException(
-                            "Team not found for id: " + request.getTeamId()));
+            Long teamId = request.getTeamId();
+            teamRepository.findById(teamId)
+                    .orElseThrow(() -> new IllegalStateException("Team not found for id: " + teamId));
         }
         matchSearchIndex.invalidateAll();
     }

@@ -33,8 +33,8 @@ public class TeamController {
     @PostMapping
     @Operation(summary = "Create team")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Team created"),
-            @ApiResponse(responseCode = "400", description = "Invalid request")
+        @ApiResponse(responseCode = "201", description = "Team created"),
+        @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     public ResponseEntity<TeamResponse> create(@Valid @RequestBody TeamRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
@@ -43,9 +43,9 @@ public class TeamController {
     @PutMapping("/{id}")
     @Operation(summary = "Update team")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Team updated"),
-            @ApiResponse(responseCode = "400", description = "Invalid request"),
-            @ApiResponse(responseCode = "404", description = "Team not found")
+        @ApiResponse(responseCode = "200", description = "Team updated"),
+        @ApiResponse(responseCode = "400", description = "Invalid request"),
+        @ApiResponse(responseCode = "404", description = "Team not found")
     })
     public ResponseEntity<TeamResponse> update(@PathVariable Long id, @Valid @RequestBody TeamRequest request) {
         return ResponseEntity.ok(service.update(id, request));
@@ -54,8 +54,8 @@ public class TeamController {
     @GetMapping("/{id}")
     @Operation(summary = "Get team by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Team received"),
-            @ApiResponse(responseCode = "404", description = "Team not found")
+        @ApiResponse(responseCode = "200", description = "Team received"),
+        @ApiResponse(responseCode = "404", description = "Team not found")
     })
     public ResponseEntity<TeamResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
@@ -64,7 +64,7 @@ public class TeamController {
     @GetMapping
     @Operation(summary = "Get all teams")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Teams received")
+        @ApiResponse(responseCode = "200", description = "Teams received")
     })
     public ResponseEntity<List<TeamResponse>> getAll() {
         return ResponseEntity.ok(service.getAll());
@@ -73,8 +73,8 @@ public class TeamController {
     @GetMapping("/game/{gameId}")
     @Operation(summary = "Get teams by game id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Teams received"),
-            @ApiResponse(responseCode = "404", description = "Game not found")
+        @ApiResponse(responseCode = "200", description = "Teams received"),
+        @ApiResponse(responseCode = "404", description = "Game not found")
     })
     public ResponseEntity<List<TeamResponse>> getByGameId(@PathVariable Long gameId) {
         return ResponseEntity.ok(service.getByGameId(gameId));
@@ -83,8 +83,8 @@ public class TeamController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete team")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Team deleted"),
-            @ApiResponse(responseCode = "404", description = "Team not found")
+        @ApiResponse(responseCode = "204", description = "Team deleted"),
+        @ApiResponse(responseCode = "404", description = "Team not found")
     })
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

@@ -34,8 +34,8 @@ public class PlayerController {
     @PostMapping
     @Operation(summary = "Create player")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Player created"),
-            @ApiResponse(responseCode = "400", description = "Invalid request")
+        @ApiResponse(responseCode = "201", description = "Player created"),
+        @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     public ResponseEntity<PlayerResponse> create(@Valid @RequestBody PlayerRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
@@ -44,9 +44,9 @@ public class PlayerController {
     @PutMapping("/{id}")
     @Operation(summary = "Update player")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Player updated"),
-            @ApiResponse(responseCode = "400", description = "Invalid request"),
-            @ApiResponse(responseCode = "404", description = "Player not found")
+        @ApiResponse(responseCode = "200", description = "Player updated"),
+        @ApiResponse(responseCode = "400", description = "Invalid request"),
+        @ApiResponse(responseCode = "404", description = "Player not found")
     })
     public ResponseEntity<PlayerResponse> update(@PathVariable Long id, @Valid @RequestBody PlayerRequest request) {
         return ResponseEntity.ok(service.update(id, request));
@@ -55,8 +55,8 @@ public class PlayerController {
     @GetMapping("/{id}")
     @Operation(summary = "Get player by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Player received"),
-            @ApiResponse(responseCode = "404", description = "Player not found")
+        @ApiResponse(responseCode = "200", description = "Player received"),
+        @ApiResponse(responseCode = "404", description = "Player not found")
     })
     public ResponseEntity<PlayerResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
@@ -65,7 +65,7 @@ public class PlayerController {
     @GetMapping
     @Operation(summary = "Get all players")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Players received")
+        @ApiResponse(responseCode = "200", description = "Players received")
     })
     public ResponseEntity<List<PlayerResponse>> getAll() {
         return ResponseEntity.ok(service.getAll());
@@ -74,7 +74,7 @@ public class PlayerController {
     @GetMapping("/search")
     @Operation(summary = "Search players by nickname")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Players received")
+        @ApiResponse(responseCode = "200", description = "Players received")
     })
     public ResponseEntity<List<PlayerResponse>> searchByNickname(@RequestParam String nickname) {
         return ResponseEntity.ok(service.searchByNickname(nickname));
@@ -83,8 +83,8 @@ public class PlayerController {
     @GetMapping("/team/{teamId}")
     @Operation(summary = "Get players by team id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Players received"),
-            @ApiResponse(responseCode = "404", description = "Team not found")
+        @ApiResponse(responseCode = "200", description = "Players received"),
+        @ApiResponse(responseCode = "404", description = "Team not found")
     })
     public ResponseEntity<List<PlayerResponse>> getByTeamId(@PathVariable Long teamId) {
         return ResponseEntity.ok(service.getByTeamId(teamId));
@@ -93,8 +93,8 @@ public class PlayerController {
     @GetMapping("/game/{gameId}")
     @Operation(summary = "Get players by game id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Players received"),
-            @ApiResponse(responseCode = "404", description = "Game not found")
+        @ApiResponse(responseCode = "200", description = "Players received"),
+        @ApiResponse(responseCode = "404", description = "Game not found")
     })
     public ResponseEntity<List<PlayerResponse>> getByGameId(@PathVariable Long gameId) {
         return ResponseEntity.ok(service.getByGameId(gameId));
@@ -103,8 +103,8 @@ public class PlayerController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete player")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Player deleted"),
-            @ApiResponse(responseCode = "404", description = "Player not found")
+        @ApiResponse(responseCode = "204", description = "Player deleted"),
+        @ApiResponse(responseCode = "404", description = "Player not found")
     })
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

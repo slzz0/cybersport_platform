@@ -33,8 +33,8 @@ public class TournamentController {
     @PostMapping
     @Operation(summary = "Create tournament")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Tournament created"),
-            @ApiResponse(responseCode = "400", description = "Invalid request")
+        @ApiResponse(responseCode = "201", description = "Tournament created"),
+        @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     public ResponseEntity<TournamentResponse> create(@Valid @RequestBody TournamentRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
@@ -43,9 +43,9 @@ public class TournamentController {
     @PutMapping("/{id}")
     @Operation(summary = "Update tournament")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Tournament updated"),
-            @ApiResponse(responseCode = "400", description = "Invalid request"),
-            @ApiResponse(responseCode = "404", description = "Tournament not found")
+        @ApiResponse(responseCode = "200", description = "Tournament updated"),
+        @ApiResponse(responseCode = "400", description = "Invalid request"),
+        @ApiResponse(responseCode = "404", description = "Tournament not found")
     })
     public ResponseEntity<TournamentResponse> update(
             @PathVariable Long id,
@@ -57,8 +57,8 @@ public class TournamentController {
     @GetMapping("/{id}")
     @Operation(summary = "Get tournament by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Tournament received"),
-            @ApiResponse(responseCode = "404", description = "Tournament not found")
+        @ApiResponse(responseCode = "200", description = "Tournament received"),
+        @ApiResponse(responseCode = "404", description = "Tournament not found")
     })
     public ResponseEntity<TournamentResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
@@ -67,7 +67,7 @@ public class TournamentController {
     @GetMapping
     @Operation(summary = "Get all tournaments")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Tournaments received")
+        @ApiResponse(responseCode = "200", description = "Tournaments received")
     })
     public ResponseEntity<List<TournamentResponse>> getAll() {
         return ResponseEntity.ok(service.getAll());
@@ -76,8 +76,8 @@ public class TournamentController {
     @GetMapping("/game/{gameId}")
     @Operation(summary = "Get tournaments by game id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Tournaments received"),
-            @ApiResponse(responseCode = "404", description = "Game not found")
+        @ApiResponse(responseCode = "200", description = "Tournaments received"),
+        @ApiResponse(responseCode = "404", description = "Game not found")
     })
     public ResponseEntity<List<TournamentResponse>> getByGameId(@PathVariable Long gameId) {
         return ResponseEntity.ok(service.getByGameId(gameId));
@@ -86,8 +86,8 @@ public class TournamentController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete tournament")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Tournament deleted"),
-            @ApiResponse(responseCode = "404", description = "Tournament not found")
+        @ApiResponse(responseCode = "204", description = "Tournament deleted"),
+        @ApiResponse(responseCode = "404", description = "Tournament not found")
     })
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

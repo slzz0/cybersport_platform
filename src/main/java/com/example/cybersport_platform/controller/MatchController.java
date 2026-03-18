@@ -40,8 +40,8 @@ public class MatchController {
     @PostMapping
     @Operation(summary = "Create match")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Match created"),
-            @ApiResponse(responseCode = "400", description = "Invalid request")
+        @ApiResponse(responseCode = "201", description = "Match created"),
+        @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     public ResponseEntity<MatchResponse> create(@Valid @RequestBody MatchRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
@@ -50,9 +50,9 @@ public class MatchController {
     @PutMapping("/{id}")
     @Operation(summary = "Update match")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Match updated"),
-            @ApiResponse(responseCode = "400", description = "Invalid request"),
-            @ApiResponse(responseCode = "404", description = "Match not found")
+        @ApiResponse(responseCode = "200", description = "Match updated"),
+        @ApiResponse(responseCode = "400", description = "Invalid request"),
+        @ApiResponse(responseCode = "404", description = "Match not found")
     })
     public ResponseEntity<MatchResponse> update(@PathVariable Long id, @Valid @RequestBody MatchRequest request) {
         return ResponseEntity.ok(service.update(id, request));
@@ -61,8 +61,8 @@ public class MatchController {
     @GetMapping("/{id}")
     @Operation(summary = "Get match by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Match received"),
-            @ApiResponse(responseCode = "404", description = "Match not found")
+        @ApiResponse(responseCode = "200", description = "Match received"),
+        @ApiResponse(responseCode = "404", description = "Match not found")
     })
     public ResponseEntity<MatchResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
@@ -71,7 +71,7 @@ public class MatchController {
     @GetMapping
     @Operation(summary = "Get all matches")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Matches received")
+        @ApiResponse(responseCode = "200", description = "Matches received")
     })
     public ResponseEntity<List<MatchResponse>> getAll() {
         return ResponseEntity.ok(service.getAll());
@@ -80,8 +80,8 @@ public class MatchController {
     @GetMapping("/tournament/{tournamentId}")
     @Operation(summary = "Get matches by tournament id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Matches received"),
-            @ApiResponse(responseCode = "404", description = "Tournament not found")
+        @ApiResponse(responseCode = "200", description = "Matches received"),
+        @ApiResponse(responseCode = "404", description = "Tournament not found")
     })
     public ResponseEntity<List<MatchResponse>> getByTournamentId(@PathVariable Long tournamentId) {
         return ResponseEntity.ok(service.getByTournamentId(tournamentId));
@@ -90,8 +90,8 @@ public class MatchController {
     @GetMapping("/filter")
     @Operation(summary = "Filter matches by nested fields with pagination")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Matches received"),
-            @ApiResponse(responseCode = "400", description = "Invalid request")
+        @ApiResponse(responseCode = "200", description = "Matches received"),
+        @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     public ResponseEntity<Page<MatchResponse>> filter(
             @RequestParam(required = false) String gameName,
@@ -116,8 +116,8 @@ public class MatchController {
     @GetMapping("/search/jpql")
     @Operation(summary = "Filter matches by nested fields using JPQL")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Matches received"),
-            @ApiResponse(responseCode = "400", description = "Invalid request")
+        @ApiResponse(responseCode = "200", description = "Matches received"),
+        @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     public ResponseEntity<Page<MatchResponse>> searchJpql(
             @RequestParam(required = false) String gameName,
@@ -139,8 +139,8 @@ public class MatchController {
     @GetMapping("/search/native")
     @Operation(summary = "Filter matches by nested fields using native query")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Matches received"),
-            @ApiResponse(responseCode = "400", description = "Invalid request")
+        @ApiResponse(responseCode = "200", description = "Matches received"),
+        @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     public ResponseEntity<Page<MatchResponse>> searchNative(
             @RequestParam(required = false) String gameName,
@@ -162,7 +162,7 @@ public class MatchController {
     @GetMapping("/page")
     @Operation(summary = "Get matches with pagination only")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Matches received")
+        @ApiResponse(responseCode = "200", description = "Matches received")
     })
     public ResponseEntity<Page<MatchResponse>> getPage(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(service.getAllPaged(pageable));
@@ -171,8 +171,8 @@ public class MatchController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete match")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Match deleted"),
-            @ApiResponse(responseCode = "404", description = "Match not found")
+        @ApiResponse(responseCode = "204", description = "Match deleted"),
+        @ApiResponse(responseCode = "404", description = "Match not found")
     })
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

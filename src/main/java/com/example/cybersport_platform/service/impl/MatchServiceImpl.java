@@ -32,6 +32,15 @@ public class MatchServiceImpl implements MatchService {
     private static final String TOURNAMENT_NOT_FOUND_MESSAGE = "Tournament not found: ";
     private static final LocalDateTime DEFAULT_PLAYED_FROM = LocalDateTime.of(1970, 1, 1, 0, 0);
     private static final LocalDateTime DEFAULT_PLAYED_TO = LocalDateTime.of(2999, 12, 31, 23, 59, 59);
+    private static final String CACHE_HIT_LOG_MESSAGE =
+            "Match search cache hit: queryType={}, gameName={}, tournamentName={}, playedFrom={}, playedTo={}, "
+            + "pageable={}";
+    private static final String CACHE_MISS_LOG_MESSAGE =
+            "Match search cache miss: queryType={}, gameName={}, tournamentName={}, playedFrom={}, playedTo={}, "
+            + "pageable={}";
+    private static final String CACHE_STORE_LOG_MESSAGE =
+            "Match search cache store: queryType={}, gameName={}, tournamentName={}, playedFrom={}, playedTo={}, "
+            + "totalElements={}";
 
     private final MatchRepository matchRepository;
     private final TournamentRepository tournamentRepository;
@@ -46,16 +55,19 @@ public class MatchServiceImpl implements MatchService {
         match.setScoreTeam2(request.getScoreTeam2());
         match.setPlayedAt(request.getPlayedAt());
         if (request.getTournamentId() != null) {
-            match.setTournament(tournamentRepository.findById(request.getTournamentId())
-                    .orElseThrow(() -> new NotFoundException(TOURNAMENT_NOT_FOUND_MESSAGE + request.getTournamentId())));
+            Long tournamentId = request.getTournamentId();
+            match.setTournament(tournamentRepository.findById(tournamentId)
+                    .orElseThrow(() -> new NotFoundException(TOURNAMENT_NOT_FOUND_MESSAGE + tournamentId)));
         }
         if (request.getTeam1Id() != null) {
-            match.setTeam1(teamRepository.findById(request.getTeam1Id())
-                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + request.getTeam1Id())));
+            Long team1Id = request.getTeam1Id();
+            match.setTeam1(teamRepository.findById(team1Id)
+                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + team1Id)));
         }
         if (request.getTeam2Id() != null) {
-            match.setTeam2(teamRepository.findById(request.getTeam2Id())
-                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + request.getTeam2Id())));
+            Long team2Id = request.getTeam2Id();
+            match.setTeam2(teamRepository.findById(team2Id)
+                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + team2Id)));
         }
         MatchResponse response = MatchMapper.toResponse(matchRepository.save(match));
         invalidateSearchIndex("match created");
@@ -71,20 +83,23 @@ public class MatchServiceImpl implements MatchService {
         existing.setScoreTeam2(request.getScoreTeam2());
         existing.setPlayedAt(request.getPlayedAt());
         if (request.getTournamentId() != null) {
-            existing.setTournament(tournamentRepository.findById(request.getTournamentId())
-                    .orElseThrow(() -> new NotFoundException(TOURNAMENT_NOT_FOUND_MESSAGE + request.getTournamentId())));
+            Long tournamentId = request.getTournamentId();
+            existing.setTournament(tournamentRepository.findById(tournamentId)
+                    .orElseThrow(() -> new NotFoundException(TOURNAMENT_NOT_FOUND_MESSAGE + tournamentId)));
         } else {
             existing.setTournament(null);
         }
         if (request.getTeam1Id() != null) {
-            existing.setTeam1(teamRepository.findById(request.getTeam1Id())
-                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + request.getTeam1Id())));
+            Long team1Id = request.getTeam1Id();
+            existing.setTeam1(teamRepository.findById(team1Id)
+                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + team1Id)));
         } else {
             existing.setTeam1(null);
         }
         if (request.getTeam2Id() != null) {
-            existing.setTeam2(teamRepository.findById(request.getTeam2Id())
-                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + request.getTeam2Id())));
+            Long team2Id = request.getTeam2Id();
+            existing.setTeam2(teamRepository.findById(team2Id)
+                    .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + team2Id)));
         } else {
             existing.setTeam2(null);
         }
@@ -209,27 +224,13 @@ public class MatchServiceImpl implements MatchService {
         );
         return matchSearchIndex.get(key)
                 .map(page -> {
-                    log.debug(
-                            "Match search cache hit: queryType={}, gameName={}, tournamentName={}, playedFrom={}, playedTo={}, pageable={}",
-                            queryType,
-                            gameName,
-                            tournamentName,
-                            playedFrom,
-                            playedTo,
-                            pageable
-                    );
+                    log.debug(CACHE_HIT_LOG_MESSAGE, queryType, gameName, tournamentName, playedFrom, playedTo,
+                            pageable);
                     return page;
                 })
                 .orElseGet(() -> {
-                    log.debug(
-                            "Match search cache miss: queryType={}, gameName={}, tournamentName={}, playedFrom={}, playedTo={}, pageable={}",
-                            queryType,
-                            gameName,
-                            tournamentName,
-                            playedFrom,
-                            playedTo,
-                            pageable
-                    );
+                    log.debug(CACHE_MISS_LOG_MESSAGE, queryType, gameName, tournamentName, playedFrom, playedTo,
+                            pageable);
                     Page<MatchResponse> page = getMatchesPageByQueryType(
                             gameNamePattern,
                             tournamentNamePattern,
@@ -239,15 +240,8 @@ public class MatchServiceImpl implements MatchService {
                             queryType
                     ).map(MatchMapper::toResponse);
                     matchSearchIndex.put(key, page);
-                    log.debug(
-                            "Match search cache store: queryType={}, gameName={}, tournamentName={}, playedFrom={}, playedTo={}, totalElements={}",
-                            queryType,
-                            gameName,
-                            tournamentName,
-                            playedFrom,
-                            playedTo,
-                            page.getTotalElements()
-                    );
+                    log.debug(CACHE_STORE_LOG_MESSAGE, queryType, gameName, tournamentName, playedFrom, playedTo,
+                            page.getTotalElements());
                     return page;
                 });
     }

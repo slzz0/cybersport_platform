@@ -25,8 +25,8 @@ public class GameWithTeamsController {
     @PostMapping("/non-transactional")
     @Operation(summary = "Save game with teams without transaction")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Data saved"),
-            @ApiResponse(responseCode = "400", description = "Invalid request")
+        @ApiResponse(responseCode = "200", description = "Data saved"),
+        @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     public ResponseEntity<Void> saveNonTransactional(@Valid @RequestBody GameWithTeamsRequest request) {
         gameWithTeamsService.saveGameWithTeamsNonTransactional(request);
@@ -36,8 +36,8 @@ public class GameWithTeamsController {
     @PostMapping("/transactional")
     @Operation(summary = "Save game with teams in transaction")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Data saved"),
-            @ApiResponse(responseCode = "400", description = "Invalid request")
+        @ApiResponse(responseCode = "200", description = "Data saved"),
+        @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     public ResponseEntity<Void> saveTransactional(@Valid @RequestBody GameWithTeamsRequest request) {
         gameWithTeamsService.saveGameWithTeamsTransactional(request);

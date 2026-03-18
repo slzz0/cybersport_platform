@@ -21,7 +21,12 @@ public class GlobalExceptionHandler {
             NotFoundException exception,
             HttpServletRequest request
     ) {
-        return buildError(HttpStatus.NOT_FOUND, "Resource not found", exception.getMessage(), request.getRequestURI());
+        return buildError(
+                HttpStatus.NOT_FOUND,
+                "Resource not found",
+                exception.getMessage(),
+                request.getRequestURI()
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -52,7 +57,7 @@ public class GlobalExceptionHandler {
     ) {
         List<ApiValidationError> validationErrors = exception.getConstraintViolations()
                 .stream()
-                .map(violation -> new ApiValidationError(violation.getPropertyPath().toString(), violation.getMessage()))
+                .map(violation -> toValidationError(violation))
                 .toList();
         ApiError body = new ApiError(
                 HttpStatus.BAD_REQUEST.value(),
@@ -66,12 +71,18 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
-    public org.springframework.http.ResponseEntity<ApiError> handleBadRequest(Exception exception, HttpServletRequest request) {
+    public org.springframework.http.ResponseEntity<ApiError> handleBadRequest(
+            Exception exception,
+            HttpServletRequest request
+    ) {
         return buildError(HttpStatus.BAD_REQUEST, "Bad request", exception.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(Exception.class)
-    public org.springframework.http.ResponseEntity<ApiError> handleUnexpected(Exception exception, HttpServletRequest request) {
+    public org.springframework.http.ResponseEntity<ApiError> handleUnexpected(
+            Exception exception,
+            HttpServletRequest request
+    ) {
         return buildError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Internal server error",
@@ -98,7 +109,16 @@ public class GlobalExceptionHandler {
     }
 
     private ApiValidationError toValidationError(FieldError fieldError) {
-        String message = fieldError.getDefaultMessage() == null ? "Invalid value" : fieldError.getDefaultMessage();
+        String message = fieldError.getDefaultMessage() == null
+                ? "Invalid value"
+                : fieldError.getDefaultMessage();
         return new ApiValidationError(fieldError.getField(), message);
+    }
+
+    private ApiValidationError toValidationError(jakarta.validation.ConstraintViolation<?> violation) {
+        return new ApiValidationError(
+                violation.getPropertyPath().toString(),
+                violation.getMessage()
+        );
     }
 }

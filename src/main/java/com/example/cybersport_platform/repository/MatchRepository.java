@@ -34,23 +34,23 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
 
     @Query(
             value = """
-                    select m.* from matches m
-                    join tournaments t on t.id = m.tournament_id
-                    join games g on g.id = t.game_id
-                    where lower(g.name) like :gameNamePattern
-                    and lower(t.name) like :tournamentNamePattern
-                    and m.playedat >= :playedFrom
-                    and m.playedat <= :playedTo
-                    """,
+            select m.* from matches m
+            join tournaments t on t.id = m.tournament_id
+            join games g on g.id = t.game_id
+            where lower(g.name) like :gameNamePattern
+            and lower(t.name) like :tournamentNamePattern
+            and m.playedat >= :playedFrom
+            and m.playedat <= :playedTo
+            """,
             countQuery = """
-                    select count(*) from matches m
-                    join tournaments t on t.id = m.tournament_id
-                    join games g on g.id = t.game_id
-                    where lower(g.name) like :gameNamePattern
-                    and lower(t.name) like :tournamentNamePattern
-                    and m.playedat >= :playedFrom
-                    and m.playedat <= :playedTo
-                    """,
+            select count(*) from matches m
+            join tournaments t on t.id = m.tournament_id
+            join games g on g.id = t.game_id
+            where lower(g.name) like :gameNamePattern
+            and lower(t.name) like :tournamentNamePattern
+            and m.playedat >= :playedFrom
+            and m.playedat <= :playedTo
+            """,
             nativeQuery = true
     )
     Page<Match> findByFiltersNative(
