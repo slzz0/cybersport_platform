@@ -2,17 +2,20 @@ package com.example.cybersport_platform.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -21,6 +24,7 @@ public class GlobalExceptionHandler {
             NotFoundException exception,
             HttpServletRequest request
     ) {
+        log.warn("404 Not Found: path={}, message={}", request.getRequestURI(), exception.getMessage());
         return buildError(
                 HttpStatus.NOT_FOUND,
                 "Resource not found",
@@ -34,6 +38,9 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException exception,
             HttpServletRequest request
     ) {
+        log.warn("400 Validation failed: path={}, errors={}",
+                request.getRequestURI(),
+                exception.getBindingResult().getErrorCount());
         List<ApiValidationError> validationErrors = exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -55,6 +62,9 @@ public class GlobalExceptionHandler {
             ConstraintViolationException exception,
             HttpServletRequest request
     ) {
+        log.warn("400 Constraint violation: path={}, violations={}",
+                request.getRequestURI(),
+                exception.getConstraintViolations().size());
         List<ApiValidationError> validationErrors = exception.getConstraintViolations()
                 .stream()
                 .map(violation -> toValidationError(violation))
@@ -75,7 +85,22 @@ public class GlobalExceptionHandler {
             Exception exception,
             HttpServletRequest request
     ) {
+        log.warn("400 Bad request: path={}, message={}", request.getRequestURI(), exception.getMessage());
         return buildError(HttpStatus.BAD_REQUEST, "Bad request", exception.getMessage(), request.getRequestURI());
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public org.springframework.http.ResponseEntity<ApiError> handleNoHandlerFound(
+            NoHandlerFoundException exception,
+            HttpServletRequest request
+    ) {
+        log.warn("404 No handler found: method={}, path={}", exception.getHttpMethod(), request.getRequestURI());
+        return buildError(
+                HttpStatus.NOT_FOUND,
+                "Endpoint not found",
+                exception.getMessage(),
+                request.getRequestURI()
+        );
     }
 
     @ExceptionHandler(Exception.class)
@@ -83,6 +108,7 @@ public class GlobalExceptionHandler {
             Exception exception,
             HttpServletRequest request
     ) {
+        log.error("500 Internal server error: path={}", request.getRequestURI(), exception);
         return buildError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Internal server error",
