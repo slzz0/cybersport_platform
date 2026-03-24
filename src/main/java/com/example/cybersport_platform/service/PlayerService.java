@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface PlayerService {
     PlayerResponse create(PlayerRequest request);
+    List<PlayerResponse> createBulkTransactional(List<PlayerRequest> requests);
+    List<PlayerResponse> createBulkNonTransactional(List<PlayerRequest> requests);
     PlayerResponse update(Long id, PlayerRequest request);
     PlayerResponse getById(Long id);
     List<PlayerResponse> getAll();

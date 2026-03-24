@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,32 @@ public class PlayerController {
     })
     public ResponseEntity<PlayerResponse> create(@Valid @RequestBody PlayerRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
+    }
+
+    @PostMapping("/bulk/transactional")
+    @Operation(summary = "Create players in bulk with transaction")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Players created"),
+        @ApiResponse(responseCode = "400", description = "Invalid request"),
+        @ApiResponse(responseCode = "404", description = "Team not found")
+    })
+    public ResponseEntity<List<PlayerResponse>> createBulkTransactional(
+            @Valid @NotEmpty @RequestBody List<@Valid PlayerRequest> requests
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createBulkTransactional(requests));
+    }
+
+    @PostMapping("/bulk/non-transactional")
+    @Operation(summary = "Create players in bulk without transaction")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Players created"),
+        @ApiResponse(responseCode = "400", description = "Invalid request"),
+        @ApiResponse(responseCode = "404", description = "Team not found")
+    })
+    public ResponseEntity<List<PlayerResponse>> createBulkNonTransactional(
+            @Valid @NotEmpty @RequestBody List<@Valid PlayerRequest> requests
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createBulkNonTransactional(requests));
     }
 
     @PutMapping("/{id}")
