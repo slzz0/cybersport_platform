@@ -87,9 +87,10 @@ class GameServiceImplTest {
 
     @Test
     void updateShouldThrowWhenGameMissing() {
+        GameRequest request = new GameRequest("A", "B");
         when(gameRepository.findById(9L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> gameService.update(9L, new GameRequest("A", "B")))
+        assertThatThrownBy(() -> gameService.update(9L, request))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("Game not found: 9");
     }

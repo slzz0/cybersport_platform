@@ -85,12 +85,13 @@ class GameWithTeamsServiceImplTest {
     void saveTransactionalShouldThrowWhenLookupTeamMissing() {
         Game savedGame = new Game();
         savedGame.setId(3L);
+        GameWithTeamsRequest request = request(55L);
 
         when(gameRepository.save(any(Game.class))).thenReturn(savedGame);
         when(teamRepository.save(any(Team.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(teamRepository.findById(55L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.saveGameWithTeamsTransactional(request(55L)))
+        assertThatThrownBy(() -> service.saveGameWithTeamsTransactional(request))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Team not found for id: 55");
     }

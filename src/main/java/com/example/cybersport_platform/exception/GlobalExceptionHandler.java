@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
                 exception.getConstraintViolations().size());
         List<ApiValidationError> validationErrors = exception.getConstraintViolations()
                 .stream()
-                .map(violation -> toValidationError(violation))
+                .map(this::toValidationError)
                 .toList();
         ApiError body = new ApiError(
                 HttpStatus.BAD_REQUEST.value(),

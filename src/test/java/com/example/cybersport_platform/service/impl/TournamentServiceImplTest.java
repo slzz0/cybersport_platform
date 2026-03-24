@@ -88,9 +88,10 @@ class TournamentServiceImplTest {
 
     @Test
     void createShouldThrowWhenGameMissing() {
+        TournamentRequest request = request(7L);
         when(gameRepository.findById(7L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> tournamentService.create(request(7L)))
+        assertThatThrownBy(() -> tournamentService.create(request))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("Game not found: 7");
     }
@@ -132,9 +133,10 @@ class TournamentServiceImplTest {
 
     @Test
     void updateShouldThrowWhenTournamentMissing() {
+        TournamentRequest request = request(1L);
         when(tournamentRepository.findById(10L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> tournamentService.update(10L, request(1L)))
+        assertThatThrownBy(() -> tournamentService.update(10L, request))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("Tournament not found: 10");
     }
@@ -143,11 +145,12 @@ class TournamentServiceImplTest {
     void updateShouldThrowWhenGameMissing() {
         Tournament tournament = new Tournament();
         tournament.setId(11L);
+        TournamentRequest request = request(77L);
 
         when(tournamentRepository.findById(11L)).thenReturn(Optional.of(tournament));
         when(gameRepository.findById(77L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> tournamentService.update(11L, request(77L)))
+        assertThatThrownBy(() -> tournamentService.update(11L, request))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("Game not found: 77");
     }

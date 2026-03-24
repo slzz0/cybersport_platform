@@ -87,11 +87,12 @@ class PlayerServiceImplTest {
     void createBulkNonTransactionalShouldThrowWhenTeamIsMissingAfterPartialSave() {
         PlayerRequest first = new PlayerRequest("donk", 3200, 1L);
         PlayerRequest second = new PlayerRequest("ghost", 2500, 999L);
+        List<PlayerRequest> requests = List.of(first, second);
 
         when(teamRepository.findAllById(anyIterable())).thenReturn(List.of(team));
         when(playerRepository.saveAndFlush(any(Player.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        assertThatThrownBy(() -> playerService.createBulkNonTransactional(List.of(first, second)))
+        assertThatThrownBy(() -> playerService.createBulkNonTransactional(requests))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("Team not found: 999");
 
