@@ -96,6 +96,34 @@ class MatchServiceImplTest {
     }
 
     @Test
+    void createShouldPersistMatchWithoutOptionalRelations() {
+        MatchRequest nullableRelationsRequest = new MatchRequest(
+                null,
+                null,
+                null,
+                3,
+                2,
+                LocalDateTime.of(2026, 3, 20, 18, 0)
+        );
+
+        when(matchRepository.save(any(Match.class))).thenAnswer(invocation -> {
+            Match match = invocation.getArgument(0);
+            match.setId(6L);
+            return match;
+        });
+
+        MatchResponse result = matchService.create(nullableRelationsRequest);
+
+        assertThat(result.getId()).isEqualTo(6L);
+        assertThat(result.getTournamentId()).isNull();
+        assertThat(result.getTeam1Id()).isNull();
+        assertThat(result.getTeam2Id()).isNull();
+        verify(tournamentRepository, never()).findById(any());
+        verify(teamRepository, never()).findById(any());
+        verify(matchSearchIndex).invalidateAll();
+    }
+
+    @Test
     void createShouldThrowWhenTournamentMissing() {
         when(tournamentRepository.findById(1L)).thenReturn(Optional.empty());
 
