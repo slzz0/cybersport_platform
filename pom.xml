@@ -30,10 +30,25 @@
         <sonar.coverage.jacoco.xmlReportPaths>
             ${project.build.directory}/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.coverage.inclusions>
-            src/main/java/com/example/cybersport_platform/service/impl/PlayerServiceImpl.java,
-            src/main/java/com/example/cybersport_platform/service/impl/TeamServiceImpl.java
-        </sonar.coverage.inclusions>
+        <sonar.coverage.exclusions>
+            src/main/java/com/example/cybersport_platform/CybersportPlatformApplication.java,
+            src/main/java/com/example/cybersport_platform/aop/**,
+            src/main/java/com/example/cybersport_platform/cache/**,
+            src/main/java/com/example/cybersport_platform/config/**,
+            src/main/java/com/example/cybersport_platform/controller/**,
+            src/main/java/com/example/cybersport_platform/dto/**,
+            src/main/java/com/example/cybersport_platform/exception/**,
+            src/main/java/com/example/cybersport_platform/mapper/**,
+            src/main/java/com/example/cybersport_platform/model/**,
+            src/main/java/com/example/cybersport_platform/repository/**,
+            src/main/java/com/example/cybersport_platform/service/GameService.java,
+            src/main/java/com/example/cybersport_platform/service/GameWithTeamsService.java,
+            src/main/java/com/example/cybersport_platform/service/MatchService.java,
+            src/main/java/com/example/cybersport_platform/service/PlayerService.java,
+            src/main/java/com/example/cybersport_platform/service/TeamService.java,
+            src/main/java/com/example/cybersport_platform/service/TournamentService.java,
+            src/main/java/com/example/cybersport_platform/service/MatchSearchQueryType.java
+        </sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
@@ -154,6 +169,15 @@
                 <version>0.8.12</version>
                 <executions>
                     <execution>
+                        <configuration>
+                            <excludes>
+                                <exclude>net/bytebuddy/**</exclude>
+                                <exclude>com/sun/tools/attach/**</exclude>
+                                <exclude>org/mockito/**</exclude>
+                                <exclude>**/*$MockitoMock$*</exclude>
+                                <exclude>**/*$auxiliary$*</exclude>
+                            </excludes>
+                        </configuration>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
@@ -166,8 +190,7 @@
                         </goals>
                         <configuration>
                             <includes>
-                                <include>com/example/cybersport_platform/service/impl/PlayerServiceImpl*</include>
-                                <include>com/example/cybersport_platform/service/impl/TeamServiceImpl*</include>
+                                <include>com/example/cybersport_platform/service/impl/*ServiceImpl*</include>
                             </includes>
                         </configuration>
                     </execution>
@@ -179,15 +202,18 @@
                         </goals>
                         <configuration>
                             <includes>
-                                <include>com/example/cybersport_platform/service/impl/PlayerServiceImpl*</include>
-                                <include>com/example/cybersport_platform/service/impl/TeamServiceImpl*</include>
+                                <include>com/example/cybersport_platform/service/impl/*ServiceImpl*</include>
                             </includes>
                             <rules>
                                 <rule>
                                     <element>CLASS</element>
                                     <includes>
+                                        <include>com.example.cybersport_platform.service.impl.GameServiceImpl</include>
+                                        <include>com.example.cybersport_platform.service.impl.GameWithTeamsServiceImpl</include>
+                                        <include>com.example.cybersport_platform.service.impl.MatchServiceImpl</include>
                                         <include>com.example.cybersport_platform.service.impl.PlayerServiceImpl</include>
                                         <include>com.example.cybersport_platform.service.impl.TeamServiceImpl</include>
+                                        <include>com.example.cybersport_platform.service.impl.TournamentServiceImpl</include>
                                     </includes>
                                     <limits>
                                         <limit>
