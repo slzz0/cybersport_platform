@@ -24,6 +24,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.skip>false</checkstyle.skip>
         <lombok.version>1.18.38</lombok.version>
+        <sonar.organization>slzz0</sonar.organization>
+        <sonar.projectKey>slzz0_cybersport_platform</sonar.projectKey>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.jacoco.xmlReportPaths>
+            ${project.build.directory}/site/jacoco/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <dependencies>
