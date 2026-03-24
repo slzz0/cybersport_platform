@@ -72,6 +72,35 @@ class TeamServiceImplTest {
     }
 
     @Test
+    void createShouldSaveTeamWithoutGameWhenGameIdIsNull() {
+        TeamRequest request = new TeamRequest("Free Agents", null);
+
+        when(teamRepository.save(any(Team.class))).thenAnswer(invocation -> {
+            Team team = invocation.getArgument(0);
+            team.setId(12L);
+            return team;
+        });
+
+        TeamResponse result = teamService.create(request);
+
+        assertThat(result.getId()).isEqualTo(12L);
+        assertThat(result.getGameId()).isNull();
+        verify(gameRepository, never()).findById(any());
+        verify(matchSearchIndex).invalidateAll();
+    }
+
+    @Test
+    void createShouldThrowWhenGameMissing() {
+        TeamRequest request = new TeamRequest("NAVI", 404L);
+
+        when(gameRepository.findById(404L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> teamService.create(request))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Game not found: 404");
+    }
+
+    @Test
     void getByGameIdShouldThrowWhenGameDoesNotExist() {
         when(gameRepository.existsById(77L)).thenReturn(false);
 
@@ -124,6 +153,53 @@ class TeamServiceImplTest {
         assertThat(existing.getGame()).isSameAs(game);
         assertThat(result.getGameName()).isEqualTo("Valorant");
         verify(matchSearchIndex).invalidateAll();
+    }
+
+    @Test
+    void updateShouldClearGameWhenRequestHasNullGameId() {
+        Team existing = new Team();
+        existing.setId(7L);
+        existing.setName("Cloud9");
+        existing.setGame(new Game());
+
+        TeamRequest request = new TeamRequest("Cloud9", null);
+
+        when(teamRepository.findById(7L)).thenReturn(Optional.of(existing));
+        when(teamRepository.save(existing)).thenReturn(existing);
+
+        TeamResponse result = teamService.update(7L, request);
+
+        assertThat(existing.getGame()).isNull();
+        assertThat(result.getGameId()).isNull();
+        verify(gameRepository, never()).findById(any());
+        verify(matchSearchIndex).invalidateAll();
+    }
+
+    @Test
+    void updateShouldThrowWhenTeamMissing() {
+        TeamRequest request = new TeamRequest("Fnatic", 4L);
+
+        when(teamRepository.findById(404L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> teamService.update(404L, request))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Team not found: 404");
+    }
+
+    @Test
+    void updateShouldThrowWhenGameMissing() {
+        Team existing = new Team();
+        existing.setId(8L);
+        existing.setName("OG");
+
+        TeamRequest request = new TeamRequest("OG", 505L);
+
+        when(teamRepository.findById(8L)).thenReturn(Optional.of(existing));
+        when(gameRepository.findById(505L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> teamService.update(8L, request))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Game not found: 505");
     }
 
     @Test

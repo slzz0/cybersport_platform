@@ -122,6 +122,17 @@ class PlayerServiceImplTest {
     }
 
     @Test
+    void createShouldThrowWhenTeamMissing() {
+        PlayerRequest request = new PlayerRequest("Collapse", 3000, 99L);
+
+        when(teamRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> playerService.create(request))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Team not found: 99");
+    }
+
+    @Test
     void updateShouldSaveExistingPlayerWithResolvedTeam() {
         PlayerRequest request = new PlayerRequest("Yatoro", 3100, 1L);
         Player existing = new Player();
@@ -158,6 +169,38 @@ class PlayerServiceImplTest {
         assertThat(result.getTeamId()).isNull();
         verify(matchSearchIndex).invalidateAll();
         verify(teamRepository, never()).findById(any());
+    }
+
+    @Test
+    void updateShouldThrowWhenPlayerMissing() {
+        PlayerRequest request = new PlayerRequest("Yatoro", 3100, 1L);
+
+        when(playerRepository.findById(404L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> playerService.update(404L, request))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Player not found: 404");
+    }
+
+    @Test
+    void createBulkNonTransactionalShouldSaveAllPlayersWhenAllTeamsExist() {
+        PlayerRequest first = new PlayerRequest("donk", 3200, 1L);
+        PlayerRequest second = new PlayerRequest("zont1x", 3000, 1L);
+
+        when(teamRepository.findAllById(anyIterable())).thenReturn(List.of(team));
+        when(playerRepository.saveAndFlush(any(Player.class))).thenAnswer(invocation -> {
+            Player player = invocation.getArgument(0);
+            player.setId(player.getNickname().equals("donk") ? 21L : 22L);
+            return player;
+        });
+
+        List<PlayerResponse> result = playerService.createBulkNonTransactional(List.of(first, second));
+
+        assertThat(result).hasSize(2);
+        assertThat(result).extracting(PlayerResponse::getNickname)
+                .containsExactly("donk", "zont1x");
+        verify(playerRepository, times(2)).saveAndFlush(any(Player.class));
+        verify(matchSearchIndex).invalidateAll();
     }
 
     @Test
@@ -270,6 +313,12 @@ class PlayerServiceImplTest {
     @Test
     void searchByNicknameShouldReturnEmptyListWhenNicknameBlank() {
         assertThat(playerService.searchByNickname("   ")).isEmpty();
+        verify(playerRepository, never()).findByNicknameContainingIgnoreCase(any());
+    }
+
+    @Test
+    void searchByNicknameShouldReturnEmptyListWhenNicknameIsNull() {
+        assertThat(playerService.searchByNickname(null)).isEmpty();
         verify(playerRepository, never()).findByNicknameContainingIgnoreCase(any());
     }
 

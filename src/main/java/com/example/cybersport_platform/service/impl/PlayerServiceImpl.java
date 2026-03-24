@@ -158,7 +158,7 @@ public class PlayerServiceImpl implements PlayerService {
                 .collect(Collectors.toMap(
                         com.example.cybersport_platform.model.Team::getId,
                         Function.identity(),
-                        (left, right) -> left,
+                        (existing, replacement) -> existing,
                         LinkedHashMap::new
                 ));
     }
