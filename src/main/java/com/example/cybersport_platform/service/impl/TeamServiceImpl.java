@@ -95,10 +95,8 @@ public class TeamServiceImpl implements TeamService {
         Team team = teamRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(TEAM_NOT_FOUND_MESSAGE + id));
 
-        // Remove matches where team participates as team1/team2 to avoid FK violations.
         matchRepository.deleteByTeam1IdOrTeam2Id(id, id);
 
-        // Clear many-to-many links from both sides before deleting team.
         team.getTournaments().forEach(tournament -> tournament.getTeams().remove(team));
         team.getTournaments().clear();
 

@@ -30,6 +30,10 @@
         <sonar.coverage.jacoco.xmlReportPaths>
             ${project.build.directory}/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.inclusions>
+            src/main/java/com/example/cybersport_platform/service/impl/PlayerServiceImpl.java,
+            src/main/java/com/example/cybersport_platform/service/impl/TeamServiceImpl.java
+        </sonar.coverage.inclusions>
     </properties>
 
     <dependencies>

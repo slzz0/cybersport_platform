@@ -99,7 +99,6 @@ public class TournamentServiceImpl implements TournamentService {
         Tournament tournament = tournamentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(TOURNAMENT_NOT_FOUND_MESSAGE + id));
 
-        // Remove many-to-many join rows from both sides before deleting tournament.
         tournament.getTeams().forEach(team -> team.getTournaments().remove(tournament));
         tournament.getTeams().clear();
 

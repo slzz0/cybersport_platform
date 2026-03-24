@@ -204,6 +204,29 @@ class PlayerServiceImplTest {
     }
 
     @Test
+    void createBulkTransactionalShouldHandleDuplicateTeamsFromRepository() {
+        PlayerRequest request = new PlayerRequest("donk", 3200, 1L);
+
+        Team duplicateTeam = new Team();
+        duplicateTeam.setId(1L);
+        duplicateTeam.setName("Team Spirit Duplicate");
+
+        when(teamRepository.findAllById(anyIterable())).thenReturn(List.of(team, duplicateTeam));
+        when(playerRepository.save(any(Player.class))).thenAnswer(invocation -> {
+            Player player = invocation.getArgument(0);
+            player.setId(31L);
+            return player;
+        });
+
+        List<PlayerResponse> result = playerService.createBulkTransactional(List.of(request));
+
+        assertThat(result).hasSize(1);
+        assertThat(result.getFirst().getTeamName()).isEqualTo("Team Spirit");
+        verify(playerRepository).save(any(Player.class));
+        verify(matchSearchIndex).invalidateAll();
+    }
+
+    @Test
     void getByIdShouldReturnMappedPlayer() {
         Player player = new Player();
         player.setId(6L);
