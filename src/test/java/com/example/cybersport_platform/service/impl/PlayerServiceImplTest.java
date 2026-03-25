@@ -240,14 +240,25 @@ class PlayerServiceImplTest {
     @Test
     void createBulkTransactionalShouldThrowNotFoundWithoutQueryingTeamsWhenAllTeamIdsAreNull() {
         PlayerRequest request = new PlayerRequest("donk", 3200, null);
+        Throwable throwable = captureThrowable(() -> playerService.createBulkTransactional(List.of(request)));
 
-        assertThatThrownBy(() -> playerService.createBulkTransactional(List.of(request)))
+        assertThat(throwable)
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("Team not found: null");
 
         verify(teamRepository, never()).findAllById(anyIterable());
         verify(playerRepository, never()).save(any(Player.class));
         verify(matchSearchIndex, never()).invalidateAll();
+    }
+
+    @Test
+    void createBulkTransactionalShouldReturnEmptyListWhenRequestsAreNull() {
+        List<PlayerResponse> result = playerService.createBulkTransactional(null);
+
+        assertThat(result).isEmpty();
+        verify(teamRepository, never()).findAllById(anyIterable());
+        verify(playerRepository, never()).save(any(Player.class));
+        verify(matchSearchIndex).invalidateAll();
     }
 
     @Test
@@ -297,6 +308,20 @@ class PlayerServiceImplTest {
     void getByTeamIdShouldReturnEmptyListWhenTeamIdIsNull() {
         assertThat(playerService.getByTeamId(null)).isEmpty();
         verify(teamRepository, never()).existsById(any());
+    }
+
+    private Throwable captureThrowable(ThrowingRunnable action) {
+        try {
+            action.run();
+            throw new AssertionError("Expected action to throw");
+        } catch (Throwable throwable) {
+            return throwable;
+        }
+    }
+
+    @FunctionalInterface
+    private interface ThrowingRunnable {
+        void run() throws Throwable;
     }
 
     @Test
