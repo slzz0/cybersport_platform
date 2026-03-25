@@ -140,6 +140,9 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     private List<PlayerResponse> createBulk(List<PlayerRequest> requests, boolean flushAfterEachSave) {
+        if (requests == null || requests.isEmpty()) {
+            return Collections.emptyList();
+        }
         Map<Long, com.example.cybersport_platform.model.Team> teamsById = getTeamsById(requests);
         return requests.stream()
                 .map(request -> buildPlayer(request, getRequiredTeam(teamsById, request.getTeamId())))
@@ -153,6 +156,10 @@ public class PlayerServiceImpl implements PlayerService {
                 .map(PlayerRequest::getTeamId)
                 .flatMap(teamId -> Optional.ofNullable(teamId).stream())
                 .collect(Collectors.toSet());
+
+        if (teamIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
 
         return teamRepository.findAllById(teamIds).stream()
                 .collect(Collectors.toMap(

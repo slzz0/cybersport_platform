@@ -228,6 +228,29 @@ class PlayerServiceImplTest {
     }
 
     @Test
+    void createBulkTransactionalShouldNotQueryTeamsWhenRequestListIsEmpty() {
+        List<PlayerResponse> result = playerService.createBulkTransactional(List.of());
+
+        assertThat(result).isEmpty();
+        verify(teamRepository, never()).findAllById(anyIterable());
+        verify(playerRepository, never()).save(any(Player.class));
+        verify(matchSearchIndex).invalidateAll();
+    }
+
+    @Test
+    void createBulkTransactionalShouldThrowNotFoundWithoutQueryingTeamsWhenAllTeamIdsAreNull() {
+        PlayerRequest request = new PlayerRequest("donk", 3200, null);
+
+        assertThatThrownBy(() -> playerService.createBulkTransactional(List.of(request)))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Team not found: null");
+
+        verify(teamRepository, never()).findAllById(anyIterable());
+        verify(playerRepository, never()).save(any(Player.class));
+        verify(matchSearchIndex, never()).invalidateAll();
+    }
+
+    @Test
     void getByIdShouldReturnMappedPlayer() {
         Player player = new Player();
         player.setId(6L);
