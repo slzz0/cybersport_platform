@@ -17,7 +17,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/archive/cybersport-platform-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <maxFileSize>40KB</maxFileSize>
+            <maxFileSize>40MB</maxFileSize>
             <maxHistory>30</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
