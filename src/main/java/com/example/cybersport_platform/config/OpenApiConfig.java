@@ -13,7 +13,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Cybersport Platform API")
-                        .description("API for managing games, teams, tournaments, players and matches")
+                        .description("API for managing games, teams, tournaments players and matches")
                         .version("v1"));
     }
 }
