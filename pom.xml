@@ -31,23 +31,7 @@
             ${project.build.directory}/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>
-            src/main/java/com/example/cybersport_platform/CybersportPlatformApplication.java,
-            src/main/java/com/example/cybersport_platform/aop/**,
-            src/main/java/com/example/cybersport_platform/cache/**,
-            src/main/java/com/example/cybersport_platform/config/**,
-            src/main/java/com/example/cybersport_platform/controller/**,
-            src/main/java/com/example/cybersport_platform/dto/**,
-            src/main/java/com/example/cybersport_platform/exception/**,
-            src/main/java/com/example/cybersport_platform/mapper/**,
-            src/main/java/com/example/cybersport_platform/model/**,
-            src/main/java/com/example/cybersport_platform/repository/**,
-            src/main/java/com/example/cybersport_platform/service/GameService.java,
-            src/main/java/com/example/cybersport_platform/service/GameWithTeamsService.java,
-            src/main/java/com/example/cybersport_platform/service/MatchService.java,
-            src/main/java/com/example/cybersport_platform/service/PlayerService.java,
-            src/main/java/com/example/cybersport_platform/service/TeamService.java,
-            src/main/java/com/example/cybersport_platform/service/TournamentService.java,
-            src/main/java/com/example/cybersport_platform/service/MatchSearchQueryType.java
+            **/*
         </sonar.coverage.exclusions>
     </properties>
 
