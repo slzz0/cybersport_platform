@@ -50,14 +50,17 @@ public class RaceConditionDemoServiceImpl implements RaceConditionDemoService {
 
     private int runScenario(int threadCount, int incrementsPerThread, IncrementCounter counter) {
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
-        List<Future<?>> futures = new ArrayList<>();
-        for (int i = 0; i < threadCount; i++) {
-            futures.add(executorService.submit(() -> incrementCounter(counter, incrementsPerThread)));
-        }
+        try {
+            List<Future<?>> futures = new ArrayList<>();
+            for (int i = 0; i < threadCount; i++) {
+                futures.add(executorService.submit(() -> incrementCounter(counter, incrementsPerThread)));
+            }
 
-        waitForCompletion(futures);
-        executorService.shutdown();
-        return counter.get();
+            waitForCompletion(futures);
+            return counter.get();
+        } finally {
+            executorService.shutdown();
+        }
     }
 
     private void incrementCounter(IncrementCounter counter, int incrementsPerThread) {
