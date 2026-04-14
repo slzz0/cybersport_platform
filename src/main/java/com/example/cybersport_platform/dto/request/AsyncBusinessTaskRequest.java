@@ -22,8 +22,8 @@ public class AsyncBusinessTaskRequest {
     @Size(max = 120, message = "Operation name must be at most 120 characters")
     private String operationName;
 
-    @Schema(description = "Simulated execution time in milliseconds", example = "3000")
-    @Min(value = 100, message = "Duration must be at least 100 ms")
-    @Max(value = 30000, message = "Duration must be at most 30000 ms")
+    @Schema(description = "Simulated execution time in milliseconds", example = "8000")
+    @Min(value = 7000, message = "Duration must be at least 7000 ms")
+    @Max(value = 10000, message = "Duration must be at most 10000 ms")
     private long durationMs;
 }

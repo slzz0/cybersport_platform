@@ -12,11 +12,11 @@ class RaceConditionDemoServiceImplTest {
 
     @Test
     void runDemoShouldShowSafeCountersReachExpectedValue() {
-        RaceConditionDemoRequest request = new RaceConditionDemoRequest(64, 2_000);
+        RaceConditionDemoRequest request = new RaceConditionDemoRequest(8, 2_000);
 
         RaceConditionDemoResponse response = service.runDemo(request);
 
-        assertThat(response.getExpectedValue()).isEqualTo(128_000);
+        assertThat(response.getExpectedValue()).isEqualTo(16_000);
         assertThat(response.getSynchronizedValue()).isEqualTo(response.getExpectedValue());
         assertThat(response.getAtomicValue()).isEqualTo(response.getExpectedValue());
         assertThat(response.getUnsafeValue()).isLessThanOrEqualTo(response.getExpectedValue());

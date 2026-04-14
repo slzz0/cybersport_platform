@@ -22,15 +22,24 @@ public class AsyncTaskProcessor {
 
         try {
             task.markRunning();
+            long durationMs = task.getDurationMs();
+            int totalSteps = task.getTotalSteps();
+            long baseStepDurationMs = durationMs / totalSteps;
+            long remainderMs = durationMs % totalSteps;
             log.info(
-                    "Async task started in background: taskId={}, operationName='{}', durationMs={}",
+                    "Async task started in background: taskId={}, operationName='{}', durationMs={}, totalSteps={}",
                     taskId,
-                    task.toResponse().getOperationName(),
-                    task.toResponse().getDurationMs()
+                    task.getOperationName(),
+                    durationMs,
+                    totalSteps
             );
-            Thread.sleep(task.toResponse().getDurationMs());
-            String result = "Business operation '" + task.toResponse().getOperationName()
-                    + "' completed successfully";
+            for (int step = 1; step <= totalSteps; step++) {
+                long stepDurationMs = baseStepDurationMs + (step <= remainderMs ? 1 : 0);
+                Thread.sleep(stepDurationMs);
+                task.markStepCompleted(step);
+            }
+            String result = "Business operation '" + task.getOperationName()
+                    + "' completed successfully. Steps completed: " + totalSteps + "/" + totalSteps;
             task.markCompleted(result);
             log.info(
                     "Async task completed: taskId={}, finalStatus={}, result='{}'",

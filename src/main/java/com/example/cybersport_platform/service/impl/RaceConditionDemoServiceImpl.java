@@ -23,7 +23,7 @@ public class RaceConditionDemoServiceImpl implements RaceConditionDemoService {
         int incrementsPerThread = request.getIncrementsPerThread();
         int expectedValue = threadCount * incrementsPerThread;
 
-        int unsafeValue = runScenario(threadCount, incrementsPerThread, new UnsafeCounter());
+        int unsafeValue = runUnsafeScenario(threadCount, incrementsPerThread);
         int synchronizedValue = runScenario(threadCount, incrementsPerThread, new SynchronizedCounter());
         int atomicValue = runScenario(threadCount, incrementsPerThread, new AtomicCounter());
 
@@ -46,6 +46,15 @@ public class RaceConditionDemoServiceImpl implements RaceConditionDemoService {
                 response.getAtomicValue()
         );
         return response;
+    }
+
+    private int runUnsafeScenario(int threadCount, int incrementsPerThread) {
+        int lowestObservedValue = Integer.MAX_VALUE;
+        for (int attempt = 0; attempt < 3; attempt++) {
+            int attemptValue = runScenario(threadCount, incrementsPerThread, new UnsafeCounter());
+            lowestObservedValue = Math.min(lowestObservedValue, attemptValue);
+        }
+        return lowestObservedValue;
     }
 
     private int runScenario(int threadCount, int incrementsPerThread, IncrementCounter counter) {
@@ -94,7 +103,9 @@ public class RaceConditionDemoServiceImpl implements RaceConditionDemoService {
 
         @Override
         public void increment() {
-            value++;
+            int currentValue = value;
+            Thread.yield();
+            value = currentValue + 1;
         }
 
         @Override

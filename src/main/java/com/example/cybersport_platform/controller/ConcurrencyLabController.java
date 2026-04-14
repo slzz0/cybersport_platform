@@ -4,6 +4,7 @@ import com.example.cybersport_platform.dto.request.AsyncBusinessTaskRequest;
 import com.example.cybersport_platform.dto.request.RaceConditionDemoRequest;
 import com.example.cybersport_platform.dto.response.AsyncTaskStartResponse;
 import com.example.cybersport_platform.dto.response.AsyncTaskStatusResponse;
+import com.example.cybersport_platform.dto.response.AsyncTasksOverviewResponse;
 import com.example.cybersport_platform.dto.response.CounterResponse;
 import com.example.cybersport_platform.dto.response.RaceConditionDemoResponse;
 import com.example.cybersport_platform.service.AsyncBusinessTaskService;
@@ -13,18 +14,23 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/api/concurrency")
 @Tag(name = "Concurrency Lab", description = "Async tasks, thread-safe counter and race condition demo")
@@ -44,6 +50,13 @@ public class ConcurrencyLabController {
             @Valid @RequestBody AsyncBusinessTaskRequest request
     ) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(asyncBusinessTaskService.startTask(request));
+    }
+
+    @GetMapping("/tasks")
+    @Operation(summary = "Get overview of all asynchronous tasks")
+    @ApiResponse(responseCode = "200", description = "Task overview received")
+    public ResponseEntity<AsyncTasksOverviewResponse> getAllTaskStatuses() {
+        return ResponseEntity.ok(asyncBusinessTaskService.getAllTaskStatuses());
     }
 
     @GetMapping("/tasks/{taskId}")
@@ -70,15 +83,19 @@ public class ConcurrencyLabController {
         return ResponseEntity.ok(new CounterResponse(threadSafeCounterService.getValue()));
     }
 
-    @PostMapping("/race-condition/demo")
+    @GetMapping("/race-condition/demo")
     @Operation(summary = "Demonstrate race condition and thread-safe solutions")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Demo completed"),
         @ApiResponse(responseCode = "400", description = "Invalid request")
     })
     public ResponseEntity<RaceConditionDemoResponse> runRaceConditionDemo(
-            @Valid @RequestBody RaceConditionDemoRequest request
+            @RequestParam @Min(value = 2, message = "Thread count must be at least 2")
+            @Max(value = 500, message = "Thread count must be at most 500") int threadCount,
+            @RequestParam @Min(value = 1, message = "Increments per thread must be at least 1")
+            @Max(value = 100000, message = "Increments per thread must be at most 100000") int incrementsPerThread
     ) {
+        RaceConditionDemoRequest request = new RaceConditionDemoRequest(threadCount, incrementsPerThread);
         return ResponseEntity.ok(raceConditionDemoService.runDemo(request));
     }
 }

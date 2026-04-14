@@ -24,6 +24,15 @@ public class AsyncTaskStatusResponse {
     @Schema(description = "Requested duration in milliseconds", example = "3000")
     private long durationMs;
 
+    @Schema(description = "Completed progress steps", example = "3")
+    private int completedSteps;
+
+    @Schema(description = "Current progress percent", example = "37")
+    private int progressPercent;
+
+    @Schema(description = "Estimated remaining time in milliseconds", example = "5000")
+    private long remainingMs;
+
     @Schema(description = "Task creation timestamp")
     private LocalDateTime createdAt;
 

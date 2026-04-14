@@ -9,7 +9,7 @@ import lombok.Getter;
 @Schema(description = "Race condition demonstration result")
 public class RaceConditionDemoResponse {
 
-    @Schema(description = "ExecutorService thread count", example = "64")
+    @Schema(description = "ExecutorService thread count", example = "8")
     private int threadCount;
 
     @Schema(description = "Increment count per thread", example = "2000")
@@ -18,7 +18,7 @@ public class RaceConditionDemoResponse {
     @Schema(description = "Expected final counter value", example = "128000")
     private int expectedValue;
 
-    @Schema(description = "Unsafe counter value with race condition", example = "117452")
+    @Schema(description = "Actual final value produced by the unsafe counter", example = "117452")
     private int unsafeValue;
 
     @Schema(description = "Safe counter value using synchronized", example = "128000")

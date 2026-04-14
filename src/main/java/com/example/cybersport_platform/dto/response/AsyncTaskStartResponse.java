@@ -15,4 +15,7 @@ public class AsyncTaskStartResponse {
 
     @Schema(description = "Current task status", example = "PENDING")
     private AsyncTaskExecutionStatus status;
+
+    @Schema(description = "Planned task duration in milliseconds", example = "8000")
+    private long durationMs;
 }

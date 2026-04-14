@@ -15,8 +15,8 @@ import lombok.Setter;
 @Schema(description = "Request for race condition demonstration")
 public class RaceConditionDemoRequest {
 
-    @Schema(description = "Thread count for ExecutorService demo", example = "64")
-    @Min(value = 50, message = "Thread count must be at least 50")
+    @Schema(description = "Thread count for ExecutorService demo", example = "8")
+    @Min(value = 2, message = "Thread count must be at least 2")
     @Max(value = 500, message = "Thread count must be at most 500")
     private int threadCount;
 
