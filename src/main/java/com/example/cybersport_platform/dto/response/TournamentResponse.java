@@ -1,43 +1,33 @@
 package com.example.cybersport_platform.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Schema(description = "Tournament response DTO")
-public class TournamentResponse {
-
-    @Schema(description = "Tournament id", example = "1")
-    private Long id;
-
-    @Schema(description = "Tournament name", example = "The International")
-    private String name;
-
-    @Schema(description = "Start date", example = "2026-08-15")
-    private LocalDate startDate;
-
-    @Schema(description = "End date", example = "2026-08-25")
-    private LocalDate endDate;
-
-    @Schema(description = "Prize pool", example = "$1,000,000")
-    private String prizePool;
-
-    @Schema(description = "Game id", example = "1")
-    private Long gameId;
-
-    @Schema(description = "Game name", example = "Dota 2")
-    private String gameName;
+public class TournamentResponse extends TournamentBaseResponse {
 
     @Schema(description = "Participating teams for this tournament")
     private List<TeamSummaryResponse> teams = new ArrayList<>();
+
+    public TournamentResponse(
+            Long id,
+            String name,
+            java.time.LocalDate startDate,
+            java.time.LocalDate endDate,
+            String prizePool,
+            Long gameId,
+            String gameName,
+            List<TeamSummaryResponse> teams
+    ) {
+        super(id, name, startDate, endDate, prizePool, gameId, gameName);
+        this.teams = teams != null ? teams : new ArrayList<>();
+    }
 }
