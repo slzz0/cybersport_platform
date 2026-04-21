@@ -6,15 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Team response DTO")
-public class TeamResponse {
+@Schema(description = "Compact team response DTO")
+public class TeamSummaryResponse {
 
     @Schema(description = "Team id", example = "1")
     private Long id;
@@ -27,7 +24,4 @@ public class TeamResponse {
 
     @Schema(description = "Game name", example = "Dota 2")
     private String gameName;
-
-    @Schema(description = "Related tournaments for this team")
-    private List<TournamentSummaryResponse> tournaments = new ArrayList<>();
 }
