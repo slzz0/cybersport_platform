@@ -98,7 +98,7 @@ public class AsyncBusinessTaskServiceImpl implements AsyncBusinessTaskService {
 
     private int countByStatus(List<AsyncTaskStatusResponse> taskResponses, AsyncTaskExecutionStatus status) {
         return (int) taskResponses.stream()
-                .filter(task -> task.getStatus() == status)
-                .count();
+            .filter(task -> task.getStatus() == status)
+            .count();
     }
 }

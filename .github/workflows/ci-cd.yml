@@ -178,8 +178,10 @@ jobs:
             exit 0
           fi
 
+          FRONTEND_URL="$(printf '%s' "${FRONTEND_APP_BASE_URL}" | tr -d '[:space:]' | sed 's/^"//; s/"$//')"
+
           for attempt in $(seq 1 20); do
-            if curl -fsS "${FRONTEND_APP_BASE_URL}" > /tmp/frontend.html; then
+            if curl -fsS "${FRONTEND_URL}" > /tmp/frontend.html; then
               head -n 5 /tmp/frontend.html
               exit 0
             fi

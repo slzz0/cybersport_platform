@@ -132,7 +132,7 @@ public class RaceConditionDemoServiceImpl implements RaceConditionDemoService {
     private static class AtomicCounter implements IncrementCounter {
 
         private final java.util.concurrent.atomic.AtomicInteger value =
-                new java.util.concurrent.atomic.AtomicInteger();
+            new java.util.concurrent.atomic.AtomicInteger();
 
         @Override
         public void increment() {

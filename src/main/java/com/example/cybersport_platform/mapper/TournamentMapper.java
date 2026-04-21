@@ -3,8 +3,6 @@ package com.example.cybersport_platform.mapper;
 import com.example.cybersport_platform.dto.response.TournamentResponse;
 import com.example.cybersport_platform.dto.response.TournamentSummaryResponse;
 import com.example.cybersport_platform.dto.response.TeamSummaryResponse;
-import com.example.cybersport_platform.model.Match;
-import com.example.cybersport_platform.model.Team;
 import com.example.cybersport_platform.model.Tournament;
 import lombok.experimental.UtilityClass;
 

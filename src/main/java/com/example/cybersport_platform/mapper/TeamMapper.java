@@ -5,7 +5,6 @@ import com.example.cybersport_platform.dto.response.TeamSummaryResponse;
 import com.example.cybersport_platform.dto.response.TournamentSummaryResponse;
 import com.example.cybersport_platform.model.Match;
 import com.example.cybersport_platform.model.Team;
-import com.example.cybersport_platform.model.Tournament;
 import lombok.experimental.UtilityClass;
 
 import java.util.LinkedHashMap;
