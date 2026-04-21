@@ -149,8 +149,10 @@ jobs:
             exit 0
           fi
 
+          BACKEND_URL="$(printf '%s' "${APP_BASE_URL}" | tr -d '[:space:]' | sed 's/^"//; s/"$//')"
+
           for attempt in $(seq 1 20); do
-            if curl -fsS "${APP_BASE_URL}/actuator/health/readiness" > /tmp/health.json; then
+            if curl -fsS "${BACKEND_URL}/actuator/health/readiness" > /tmp/health.json; then
               cat /tmp/health.json
               exit 0
             fi
