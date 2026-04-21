@@ -7,7 +7,7 @@
 - `docker-compose.yml`
 - `.env.backend.example`
 - `render.yaml`
-- `nginx.conf`
+- `nginx.conf.template`
 - `docker/entrypoint.sh`
 
 Локальный запуск:
