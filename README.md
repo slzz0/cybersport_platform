@@ -98,3 +98,113 @@ mvn spring-boot:run
 - `SPRING_DATASOURCE_URL`
 - `SPRING_DATASOURCE_USERNAME`
 - `SPRING_DATASOURCE_PASSWORD`
+
+## Docker
+
+В проект добавлены:
+
+- `frontend/Dockerfile.backend` для backend-приложения
+- `frontend/docker-compose.yml` для запуска приложения вместе с PostgreSQL
+- `frontend/.env.backend.example` с переменными окружения
+
+### Локальный запуск через Docker Compose
+
+1. Скопируйте переменные окружения:
+
+```bash
+cd frontend
+cp .env.backend.example .env.backend
+```
+
+2. Поднимите контейнеры:
+
+```bash
+docker compose --env-file .env.backend up --build
+```
+
+3. Проверьте healthcheck:
+
+```bash
+curl http://localhost:8080/actuator/health
+curl http://localhost:8080/actuator/health/readiness
+```
+
+### Полезные команды
+
+Остановить контейнеры:
+
+```bash
+docker compose down
+```
+
+Остановить и удалить volume базы:
+
+```bash
+docker compose down -v
+```
+
+## Render (бесплатный PaaS)
+
+Для деплоя подготовлен `frontend/render.yaml`.
+
+Что делать:
+
+1. Залейте проект в GitHub.
+2. Зарегистрируйтесь на Render.
+3. Откройте `Blueprints` -> `New Blueprint Instance`.
+4. Выберите ваш GitHub-репозиторий.
+5. Укажи путь к blueprint-файлу: `frontend/render.yaml`.
+6. Render прочитает его и создаст:
+   - бесплатный web service
+   - бесплатную PostgreSQL базу
+7. Во время первого создания Render попросит значение для `APP_CORS_ALLOWED_ORIGINS`.
+   Для frontend можно указать, например:
+
+```text
+https://your-frontend-domain.com,http://localhost:5173
+```
+
+8. После создания приложение будет доступно по адресу вида:
+
+```text
+https://cybersport-platform-api.onrender.com
+```
+
+Healthcheck endpoint:
+
+```text
+/actuator/health/readiness
+```
+
+## GitHub Actions CI/CD
+
+В проект добавлен workflow `.github/workflows/ci-cd.yml`.
+
+Он делает:
+
+- backend build + tests (`mvn verify`)
+- frontend build (`npm ci && npm run build`)
+- docker build backend-образа
+- deploy на Render через deploy hook
+- production healthcheck после деплоя
+
+### Какие секреты добавить в GitHub
+
+Откройте `GitHub -> Settings -> Secrets and variables -> Actions` и добавьте:
+
+- `RENDER_DEPLOY_HOOK_URL` — deploy hook из Render
+- `APP_BASE_URL` — публичный URL backend, например `https://cybersport-platform-api.onrender.com`
+
+### Как получить deploy hook в Render
+
+1. Откройте ваш web service в Render.
+2. Зайдите в `Settings`.
+3. Найдите `Deploy Hook`.
+4. Скопируйте URL и сохраните его в GitHub Secret `RENDER_DEPLOY_HOOK_URL`.
+
+После этого каждый push в `main` будет:
+
+1. запускать проверки
+2. собирать проект
+3. триггерить деплой
+4. проверять `/actuator/health/readiness`

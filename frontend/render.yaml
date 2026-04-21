@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: cybersport-platform-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./frontend/Dockerfile.backend
+    dockerContext: .
+    autoDeployTrigger: off
+    healthCheckPath: /actuator/health/readiness
+    envVars:
+      - key: SERVER_PORT
+        value: "10000"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cybersport-platform-db
+          property: connectionString
+      - key: APP_CORS_ALLOWED_ORIGINS
+        sync: false
+
+databases:
+  - name: cybersport-platform-db
+    plan: free
+    region: frankfurt
+    databaseName: cybersport
+    postgresMajorVersion: "17"
