@@ -141,7 +141,7 @@ export function PlayersPage() {
           action={<Button onClick={playerDialog.openCreate}>Add player</Button>}
         />
       ) : (
-        <DataTable
+        <DataTable<Player>
           data={players}
           columns={[
             {
