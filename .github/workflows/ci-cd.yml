@@ -103,13 +103,16 @@ jobs:
       - docker
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     steps:
-      - name: Skip if backend deploy hook is missing
-        if: ${{ secrets.RENDER_DEPLOY_HOOK_URL == '' }}
-        run: echo "RENDER_DEPLOY_HOOK_URL is not set. Skipping backend deploy."
-
       - name: Trigger Render deploy
-        if: ${{ secrets.RENDER_DEPLOY_HOOK_URL != '' }}
-        run: curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "${RENDER_DEPLOY_HOOK_URL}" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL is not set. Skipping backend deploy."
+            exit 0
+          fi
+
+          curl -fsS -X POST "${RENDER_DEPLOY_HOOK_URL}"
 
   deploy_frontend:
     name: Deploy Frontend to Render
@@ -118,13 +121,16 @@ jobs:
       - frontend
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     steps:
-      - name: Skip if frontend deploy hook is missing
-        if: ${{ secrets.FRONTEND_RENDER_DEPLOY_HOOK_URL == '' }}
-        run: echo "FRONTEND_RENDER_DEPLOY_HOOK_URL is not set. Skipping frontend deploy."
-
       - name: Trigger frontend deploy
-        if: ${{ secrets.FRONTEND_RENDER_DEPLOY_HOOK_URL != '' }}
-        run: curl -fsS -X POST "${{ secrets.FRONTEND_RENDER_DEPLOY_HOOK_URL }}"
+        env:
+          FRONTEND_RENDER_DEPLOY_HOOK_URL: ${{ secrets.FRONTEND_RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "${FRONTEND_RENDER_DEPLOY_HOOK_URL}" ]; then
+            echo "FRONTEND_RENDER_DEPLOY_HOOK_URL is not set. Skipping frontend deploy."
+            exit 0
+          fi
+
+          curl -fsS -X POST "${FRONTEND_RENDER_DEPLOY_HOOK_URL}"
 
   healthcheck_backend:
     name: Backend Healthcheck
@@ -133,15 +139,16 @@ jobs:
       - deploy_backend
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     steps:
-      - name: Skip if backend healthcheck config is missing
-        if: ${{ secrets.APP_BASE_URL == '' || secrets.RENDER_DEPLOY_HOOK_URL == '' }}
-        run: echo "APP_BASE_URL or RENDER_DEPLOY_HOOK_URL is not set. Skipping backend healthcheck."
-
       - name: Wait for backend to become healthy
-        if: ${{ secrets.APP_BASE_URL != '' && secrets.RENDER_DEPLOY_HOOK_URL != '' }}
         env:
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
+          if [ -z "${APP_BASE_URL}" ] || [ -z "${RENDER_DEPLOY_HOOK_URL}" ]; then
+            echo "APP_BASE_URL or RENDER_DEPLOY_HOOK_URL is not set. Skipping backend healthcheck."
+            exit 0
+          fi
+
           for attempt in $(seq 1 20); do
             if curl -fsS "${APP_BASE_URL}/actuator/health/readiness" > /tmp/health.json; then
               cat /tmp/health.json
@@ -161,15 +168,16 @@ jobs:
       - deploy_frontend
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     steps:
-      - name: Skip if frontend healthcheck config is missing
-        if: ${{ secrets.FRONTEND_APP_BASE_URL == '' || secrets.FRONTEND_RENDER_DEPLOY_HOOK_URL == '' }}
-        run: echo "FRONTEND_APP_BASE_URL or FRONTEND_RENDER_DEPLOY_HOOK_URL is not set. Skipping frontend healthcheck."
-
       - name: Wait for frontend to become healthy
-        if: ${{ secrets.FRONTEND_APP_BASE_URL != '' && secrets.FRONTEND_RENDER_DEPLOY_HOOK_URL != '' }}
         env:
           FRONTEND_APP_BASE_URL: ${{ secrets.FRONTEND_APP_BASE_URL }}
+          FRONTEND_RENDER_DEPLOY_HOOK_URL: ${{ secrets.FRONTEND_RENDER_DEPLOY_HOOK_URL }}
         run: |
+          if [ -z "${FRONTEND_APP_BASE_URL}" ] || [ -z "${FRONTEND_RENDER_DEPLOY_HOOK_URL}" ]; then
+            echo "FRONTEND_APP_BASE_URL or FRONTEND_RENDER_DEPLOY_HOOK_URL is not set. Skipping frontend healthcheck."
+            exit 0
+          fi
+
           for attempt in $(seq 1 20); do
             if curl -fsS "${FRONTEND_APP_BASE_URL}" > /tmp/frontend.html; then
               head -n 5 /tmp/frontend.html
