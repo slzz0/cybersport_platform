@@ -37,7 +37,7 @@ public class RaceConditionDemoServiceImpl implements RaceConditionDemoService {
         );
         log.info(
                 "Race condition demo result: threads={}, incrementsPerThread={}, expectedValue={}, unsafeValue={}, "
-                        + "synchronizedValue={}, atomicValue={}",
+                + "synchronizedValue={}, atomicValue={}",
                 response.getThreadCount(),
                 response.getIncrementsPerThread(),
                 response.getExpectedValue(),
@@ -132,7 +132,7 @@ public class RaceConditionDemoServiceImpl implements RaceConditionDemoService {
     private static class AtomicCounter implements IncrementCounter {
 
         private final java.util.concurrent.atomic.AtomicInteger value =
-            new java.util.concurrent.atomic.AtomicInteger();
+                new java.util.concurrent.atomic.AtomicInteger();
 
         @Override
         public void increment() {

@@ -53,7 +53,7 @@ public class AsyncBusinessTaskServiceImpl implements AsyncBusinessTaskService {
         AsyncTaskStatusResponse response = task.toResponse();
         log.info(
                 "Async task status requested: taskId={}, status={}, completedSteps={}, "
-                        + "progressPercent={}, result='{}', errorMessage='{}'",
+                + "progressPercent={}, result='{}', errorMessage='{}'",
                 response.getTaskId(),
                 response.getStatus(),
                 response.getCompletedSteps(),
@@ -86,7 +86,7 @@ public class AsyncBusinessTaskServiceImpl implements AsyncBusinessTaskService {
         );
         log.info(
                 "Async task overview requested: totalTasks={}, pendingTasks={}, runningTasks={}, "
-                        + "completedTasks={}, failedTasks={}",
+                + "completedTasks={}, failedTasks={}",
                 response.getTotalTasks(),
                 response.getPendingTasks(),
                 response.getRunningTasks(),
