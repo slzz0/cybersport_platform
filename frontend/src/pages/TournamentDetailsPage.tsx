@@ -65,19 +65,19 @@ export function TournamentDetailsPage() {
           <h3 className="font-display text-3xl font-bold text-white">Event profile</h3>
           <div className="mt-6 grid gap-4">
             <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/30">Game</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Game</p>
               <p className="mt-2 text-white">{game?.name ?? tournament.gameName}</p>
             </div>
             <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/30">Prize pool</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Prize pool</p>
               <p className="mt-2 font-display text-3xl text-white">{tournament.prizePool}</p>
             </div>
             <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/30">Matches</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Matches</p>
               <p className="mt-2 text-white">{matches.length}</p>
             </div>
             <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/30">Teams</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Teams</p>
               <p className="mt-2 text-white">{tournament.teams?.length ?? 0}</p>
             </div>
           </div>

@@ -164,18 +164,18 @@ export function TournamentsPage() {
               </div>
               <div className="mt-6 grid grid-cols-2 gap-4">
                 <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-white/30">Window</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Window</p>
                   <p className="mt-2 text-sm text-white">
                     {formatDate(tournament.startDate)} - {formatDate(tournament.endDate)}
                   </p>
                 </div>
                 <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-white/30">Matches</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Matches</p>
                   <p className="mt-2 text-sm text-white">{tournament.matchCount}</p>
                 </div>
               </div>
               <div className="mt-4 rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/30">Prize pool</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Prize pool</p>
                 <p className="mt-2 font-display text-2xl text-white">{tournament.prizePool}</p>
               </div>
               <div className="mt-6 flex gap-2">
@@ -225,4 +225,3 @@ export function TournamentsPage() {
     </>
   );
 }
-
