@@ -164,14 +164,14 @@ export function MatchesPage() {
                 <div className="flex items-center gap-3">
                   <TeamAvatar name={match.team1Name} size="md" />
                   <div>
-                    <p className="text-xs uppercase tracking-[0.2em] text-white/30">Team 1</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Team 1</p>
                     <p className="mt-1 font-semibold text-white">{match.team1Name}</p>
                   </div>
                 </div>
                 <div className="h-12 w-12" />
                 <div className="flex items-center justify-end gap-3 text-right">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.2em] text-white/30">Team 2</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Team 2</p>
                     <p className="mt-1 font-semibold text-white">{match.team2Name}</p>
                   </div>
                   <TeamAvatar name={match.team2Name} size="md" />
@@ -179,13 +179,13 @@ export function MatchesPage() {
               </div>
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-white/30">Score</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Score</p>
                   <p className="mt-2 font-display text-3xl text-white">
                     {match.scoreTeam1}:{match.scoreTeam2}
                   </p>
                 </div>
                 <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-white/30">Played at</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Played at</p>
                   <p className="mt-2 text-sm text-white">{formatDateTime(match.playedAt)}</p>
                 </div>
               </div>
