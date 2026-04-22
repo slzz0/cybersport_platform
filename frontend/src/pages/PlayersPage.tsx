@@ -171,7 +171,6 @@ export function PlayersPage() {
                     <Link to={`/players/${player.id}`} className="font-semibold text-white hover:text-accent">
                       {player.nickname}
                     </Link>
-                    <p className="mt-1 text-xs text-white/40">ID #{player.id}</p>
                   </div>
                 ),
               },
