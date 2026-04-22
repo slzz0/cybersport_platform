@@ -25,7 +25,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         {...props}
       />
       {error ? <span className="text-xs text-danger">{error}</span> : null}
-      {!error && hint ? <span className="text-xs text-white/45">{hint}</span> : null}
+      {!error && hint ? <span className="text-xs text-white/65">{hint}</span> : null}
     </label>
   );
 });

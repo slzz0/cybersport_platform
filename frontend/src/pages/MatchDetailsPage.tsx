@@ -53,12 +53,12 @@ export function MatchDetailsPage() {
       <div className="grid gap-6 lg:grid-cols-[1fr_1fr_0.9fr]">
         {[team1, team2].map((team, index) => (
           <Card key={team?.id ?? index}>
-            <p className="text-xs uppercase tracking-[0.2em] text-white/35">Team {index + 1}</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-white/75">Team {index + 1}</p>
             <div className="mt-3 flex items-center gap-3">
               {team ? <TeamAvatar name={team.name} gameName={team.gameName} size="lg" /> : null}
               <p className="font-display text-4xl font-bold text-white">{team?.name ?? "Unavailable"}</p>
             </div>
-            <p className="mt-2 text-sm text-white/50">{team?.gameName}</p>
+            <p className="mt-2 text-sm text-white/70">{team?.gameName}</p>
             {team ? (
               <div className="mt-6">
                 <Link to={`/teams/${team.id}`} className="text-sm text-accent">
@@ -69,7 +69,7 @@ export function MatchDetailsPage() {
           </Card>
         ))}
         <Card>
-          <p className="text-xs uppercase tracking-[0.2em] text-white/35">Series score</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-white/75">Series score</p>
           <p className="mt-3 font-display text-6xl font-bold text-white">
             {match.scoreTeam1}:{match.scoreTeam2}
           </p>

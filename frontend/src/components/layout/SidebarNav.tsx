@@ -65,7 +65,7 @@ export function SidebarNav() {
                     <Icon
                       className={cn(
                         "h-4 w-4 transition",
-                        isActive ? "text-white" : "text-white/55 group-hover:text-accent",
+                        isActive ? "text-white" : "text-white/75 group-hover:text-accent",
                       )}
                     />
                   </div>
@@ -84,11 +84,11 @@ export function SidebarNav() {
         <div className="mb-4 flex items-center gap-3">
           <BrandMark variant="badge" className="h-10 w-10 rounded-[16px]" />
           <div>
-            <p className="text-[11px] uppercase tracking-[0.26em] text-white/35">GRACEIT mode</p>
+            <p className="text-[11px] uppercase tracking-[0.26em] text-white/75">GRACEIT mode</p>
             <p className="mt-1 text-sm text-white/72">Play, rank, compete</p>
           </div>
         </div>
-        <p className="mt-2 text-sm text-white/55">
+        <p className="mt-2 text-sm text-white/75">
           A denser left rail inspired by competitive queue platforms and modern tournament hubs.
         </p>
       </div>

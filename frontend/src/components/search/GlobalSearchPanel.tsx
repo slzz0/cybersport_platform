@@ -63,7 +63,7 @@ export function GlobalSearchPanel({
               className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition ${
                 isActive
                   ? "bg-white/[0.07] text-white"
-                  : "text-white/50 hover:bg-white/[0.04] hover:text-white"
+                  : "text-white/70 hover:bg-white/[0.04] hover:text-white"
               }`}
             >
               <Icon className={`h-4 w-4 ${isActive ? "text-white" : "text-white/46"}`} />

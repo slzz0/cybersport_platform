@@ -12,9 +12,9 @@ const actions = [
 export function QuickActions() {
   return (
     <Card className="h-full">
-      <p className="text-[11px] uppercase tracking-[0.3em] text-white/35">Quick actions</p>
+      <p className="text-[11px] uppercase tracking-[0.3em] text-white/85">Quick actions</p>
       <h3 className="mt-3 font-display text-2xl font-bold text-white">Keep the queue moving</h3>
-      <p className="mt-2 text-sm text-white/55">
+      <p className="mt-2 text-sm text-white/85">
         Jump into the main operations with short paths optimized for tournament flow.
       </p>
       <div className="mt-6 space-y-3">

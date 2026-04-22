@@ -111,7 +111,7 @@ export function RankPage() {
               <h3 className="mt-4 font-display text-5xl font-bold tracking-wide text-white">
                 {topPlayer?.nickname ?? "No player data"}
               </h3>
-              <p className="mt-3 text-sm text-white/55">
+              <p className="mt-3 text-sm text-white/85">
                 Highest visible ELO on the platform right now with direct team context.
               </p>
             </div>
@@ -141,7 +141,7 @@ export function RankPage() {
         </Card>
 
         <Card>
-          <p className="text-[11px] uppercase tracking-[0.3em] text-white/35">Top team</p>
+          <p className="text-[11px] uppercase tracking-[0.3em] text-white/60">Top team</p>
           <div className="mt-3 flex items-center gap-4">
             {topTeam ? <TeamAvatar name={topTeam.name} gameName={topTeam.gameName} size="lg" /> : null}
             <h3 className="font-display text-3xl font-bold tracking-wide text-white">{topTeam?.name ?? "No team data"}</h3>
@@ -174,7 +174,7 @@ export function RankPage() {
         <Card>
           <div className="mb-5 flex items-center justify-between">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.28em] text-white/35">Players ladder</p>
+              <p className="text-[11px] uppercase tracking-[0.28em] text-white/60">Players ladder</p>
               <h3 className="mt-2 font-display text-3xl font-bold text-white">Top players</h3>
             </div>
             <UserSquare2 className="h-5 w-5 text-accent" />
@@ -187,10 +187,10 @@ export function RankPage() {
                 className="flex items-center justify-between rounded-2xl border border-white/8 bg-white/[0.03] p-4 transition hover:border-accent/18 hover:bg-white/[0.05]"
               >
                 <div className="flex items-center gap-4">
-                  <span className="w-8 text-sm text-white/35">#{index + 1}</span>
+                  <span className="w-8 text-sm text-white/85">#{index + 1}</span>
                   <div>
                     <p className="font-semibold text-white">{player.nickname}</p>
-                    <p className="mt-1 text-sm text-white/45">{player.teamName ?? "Unassigned"}</p>
+                    <p className="mt-1 text-sm text-white/65">{player.teamName ?? "Unassigned"}</p>
                   </div>
                 </div>
                 <Badge tone={index < 3 ? "accent" : "neutral"}>{player.elo} ELO</Badge>
@@ -202,7 +202,7 @@ export function RankPage() {
         <Card>
           <div className="mb-5 flex items-center justify-between">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.28em] text-white/35">Squad power</p>
+              <p className="text-[11px] uppercase tracking-[0.28em] text-white/60">Squad power</p>
               <h3 className="mt-2 font-display text-3xl font-bold text-white">Top teams</h3>
             </div>
             <Shield className="h-5 w-5 text-accent" />
@@ -215,11 +215,11 @@ export function RankPage() {
                 className="flex items-center justify-between rounded-2xl border border-white/8 bg-white/[0.03] p-4 transition hover:border-accent/18 hover:bg-white/[0.05]"
               >
                 <div className="flex items-center gap-4">
-                  <span className="w-8 text-sm text-white/35">#{index + 1}</span>
+                  <span className="w-8 text-sm text-white/85">#{index + 1}</span>
                   <TeamAvatar name={team.name} gameName={team.gameName} size="md" />
                   <div>
                     <p className="font-semibold text-white">{team.name}</p>
-                    <p className="mt-1 text-sm text-white/45">
+                    <p className="mt-1 text-sm text-white/65">
                       {team.gameName} • {team.rosterCount} players
                     </p>
                   </div>
@@ -235,7 +235,7 @@ export function RankPage() {
         <Card>
           <div className="mb-5 flex items-center justify-between">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.28em] text-white/35">Event heat</p>
+              <p className="text-[11px] uppercase tracking-[0.28em] text-white/60">Event heat</p>
               <h3 className="mt-2 font-display text-3xl font-bold text-white">Top tournaments</h3>
             </div>
             <Trophy className="h-5 w-5 text-accent" />
@@ -248,10 +248,10 @@ export function RankPage() {
                 className="flex items-center justify-between rounded-2xl border border-white/8 bg-white/[0.03] p-4 transition hover:border-accent/18 hover:bg-white/[0.05]"
               >
                 <div className="flex items-center gap-4">
-                  <span className="w-8 text-sm text-white/35">#{index + 1}</span>
+                  <span className="w-8 text-sm text-white/85">#{index + 1}</span>
                   <div>
                     <p className="font-semibold text-white">{tournament.name}</p>
-                    <p className="mt-1 text-sm text-white/45">
+                    <p className="mt-1 text-sm text-white/65">
                       {tournament.gameName} • {tournament.matchCount} matches
                     </p>
                   </div>
@@ -275,7 +275,7 @@ export function RankPage() {
         <Card>
           <div className="mb-5 flex items-center justify-between">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.28em] text-white/35">Arena pulse</p>
+              <p className="text-[11px] uppercase tracking-[0.28em] text-white/60">Arena pulse</p>
               <h3 className="mt-2 font-display text-3xl font-bold text-white">Hot matches</h3>
             </div>
             <Flame className="h-5 w-5 text-accent" />
@@ -288,7 +288,7 @@ export function RankPage() {
                 className="flex items-center justify-between rounded-2xl border border-white/8 bg-white/[0.03] p-4 transition hover:border-accent/18 hover:bg-white/[0.05]"
               >
                 <div className="flex items-center gap-4">
-                  <span className="w-8 text-sm text-white/35">#{index + 1}</span>
+                  <span className="w-8 text-sm text-white/85">#{index + 1}</span>
                   <div>
                     <div className="flex items-center gap-2">
                       <TeamAvatar name={match.team1Name} size="sm" />
@@ -297,14 +297,14 @@ export function RankPage() {
                       <p className="font-semibold text-white">{match.team2Name}</p>
                       <TeamAvatar name={match.team2Name} size="sm" />
                     </div>
-                    <p className="mt-1 text-sm text-white/45">{formatDateTime(match.playedAt)}</p>
+                    <p className="mt-1 text-sm text-white/65">{formatDateTime(match.playedAt)}</p>
                   </div>
                 </div>
                 <div className="text-right">
                   <Badge tone={getMatchStatus(match) === "Live" ? "danger" : "accent"}>
                     {getMatchStatus(match)}
                   </Badge>
-                  <p className="mt-2 text-xs text-white/35">{match.tournamentName}</p>
+                  <p className="mt-2 text-xs text-white/85">{match.tournamentName}</p>
                 </div>
               </Link>
             ))}

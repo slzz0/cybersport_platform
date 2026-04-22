@@ -37,7 +37,7 @@ export function Dialog({
           <div>
             <h3 className="font-display text-3xl font-bold tracking-wide text-white">{title}</h3>
             {description ? (
-              <p className="mt-2 max-w-xl text-sm text-white/55">{description}</p>
+              <p className="mt-2 max-w-xl text-sm text-white/85">{description}</p>
             ) : null}
           </div>
           <button

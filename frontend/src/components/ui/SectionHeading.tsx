@@ -20,7 +20,7 @@ export function SectionHeading({
           <p className="mb-2 text-[10px] uppercase tracking-[0.32em] text-accent/80">{eyebrow}</p>
         ) : null}
         <h2 className="font-display text-[30px] font-bold tracking-wide text-white">{title}</h2>
-        {description ? <p className="mt-2 max-w-2xl text-sm text-white/50">{description}</p> : null}
+        {description ? <p className="mt-2 max-w-2xl text-sm text-white/85">{description}</p> : null}
       </div>
       {action}
     </div>

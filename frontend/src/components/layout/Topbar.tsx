@@ -69,7 +69,7 @@ export function Topbar() {
           {showSearchTrigger ? (
             <Button
               variant="secondary"
-              className="min-w-[270px] justify-start rounded-[18px] bg-[#11161d] px-4 text-left text-white/55 hover:bg-[#151b23] lg:hidden"
+              className="min-w-[270px] justify-start rounded-[18px] bg-[#11161d] px-4 text-left text-white/75 hover:bg-[#151b23] lg:hidden"
               onClick={() => navigate("/search")}
             >
               <Search className="h-4 w-4 shrink-0 text-white/42" />

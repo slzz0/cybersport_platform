@@ -51,7 +51,7 @@ export function HomePage() {
               {featuredGames.map((game) => (
                 <span
                   key={game.id}
-                  className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/55"
+                  className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/85"
                 >
                   {game.name}
                 </span>
@@ -90,7 +90,7 @@ export function HomePage() {
                     className="rounded-[18px] border border-white/10 bg-[#11161d] p-4 transition hover:border-accent/20"
                   >
                     <div className="mb-5 flex items-center justify-between">
-                      <p className="text-xs uppercase tracking-[0.26em] text-white/35">{item.label}</p>
+                      <p className="text-xs uppercase tracking-[0.26em] text-white/85">{item.label}</p>
                       <Icon className="h-4 w-4 text-accent" />
                     </div>
                     <p className="font-display text-4xl font-bold tracking-wide text-white">{item.value}</p>
@@ -100,7 +100,7 @@ export function HomePage() {
             </div>
 
             <div className="rounded-[20px] border border-white/10 bg-[#11161d] p-5">
-              <p className="text-[11px] uppercase tracking-[0.28em] text-white/35">Platform focus</p>
+              <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">Platform focus</p>
               <h3 className="mt-3 font-display text-3xl font-bold text-white">One cleaner surface for teams, ranks and tournaments.</h3>
               <p className="mt-3 max-w-xl text-sm text-white/52">
                 The home lane stays lighter now: quick entry points, visible platform stats and less visual noise before
@@ -153,7 +153,7 @@ export function HomePage() {
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="font-semibold text-white">{tournament.name}</p>
-                    <p className="mt-1 text-sm text-white/50">{tournament.gameName}</p>
+                    <p className="mt-1 text-sm text-white/85">{tournament.gameName}</p>
                   </div>
                   <Badge
                     tone={
@@ -167,7 +167,7 @@ export function HomePage() {
                     {getTournamentStatus(tournament)}
                   </Badge>
                 </div>
-                <div className="mt-4 flex items-center justify-between text-sm text-white/45">
+                <div className="mt-4 flex items-center justify-between text-sm text-white/65">
                   <span>{formatDate(tournament.startDate)}</span>
                   <span>{tournament.prizePool}</span>
                 </div>
@@ -194,10 +194,10 @@ export function HomePage() {
                   <TeamAvatar name={team.name} gameName={team.gameName} size="md" />
                   <div>
                     <p className="font-semibold text-white">{team.name}</p>
-                    <p className="mt-1 text-sm text-white/50">{team.gameName}</p>
+                    <p className="mt-1 text-sm text-white/85">{team.gameName}</p>
                   </div>
                 </div>
-                <span className="text-sm text-white/35">#{team.id}</span>
+                <span className="text-sm text-white/85">#{team.id}</span>
               </Link>
             ))}
           </div>
@@ -229,8 +229,8 @@ export function HomePage() {
                     {getMatchStatus(match)}
                   </Badge>
                 </div>
-                <p className="mt-2 text-sm text-white/50">{match.tournamentName}</p>
-                <p className="mt-4 text-sm text-white/35">{formatDateTime(match.playedAt)}</p>
+                <p className="mt-2 text-sm text-white/85">{match.tournamentName}</p>
+                <p className="mt-4 text-sm text-white/85">{formatDateTime(match.playedAt)}</p>
               </Link>
             ))}
           </div>
@@ -250,7 +250,7 @@ export function HomePage() {
                 <div>
                   <p className="text-xs uppercase tracking-[0.26em] text-white/30">rank {index + 1}</p>
                   <p className="mt-1 text-lg font-semibold text-white">{player.nickname}</p>
-                  <p className="text-sm text-white/45">{player.teamName ?? "Unassigned"}</p>
+                  <p className="text-sm text-white/65">{player.teamName ?? "Unassigned"}</p>
                 </div>
                 <div className="text-right">
                   <p className="font-display text-3xl font-bold text-white">{player.elo}</p>
@@ -262,7 +262,7 @@ export function HomePage() {
         </Card>
 
         <Card className="panel-grid bg-surface/40">
-          <p className="text-[11px] uppercase tracking-[0.32em] text-white/35">Platform lanes</p>
+          <p className="text-[11px] uppercase tracking-[0.32em] text-white/85">Platform lanes</p>
           <h3 className="mt-4 font-display text-4xl font-bold tracking-wide text-white">
             Built for queues, squads and event flow.
           </h3>

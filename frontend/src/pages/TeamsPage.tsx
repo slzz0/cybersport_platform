@@ -145,7 +145,7 @@ export function TeamsPage() {
                   <div className="flex items-start gap-4">
                     <TeamAvatar name={team.name} gameName={team.gameName} size="lg" />
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.28em] text-white/35">{team.gameName}</p>
+                      <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">{team.gameName}</p>
                       <Link
                         to={`/teams/${team.id}`}
                         className="mt-3 block font-display text-3xl font-bold tracking-wide text-white transition group-hover:text-accent"
@@ -158,8 +158,8 @@ export function TeamsPage() {
                 </div>
                 <div className="mt-6 grid gap-4 sm:grid-cols-[1fr_auto]">
                   <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                    <p className="text-[11px] uppercase tracking-[0.28em] text-white/35">{team.gameName}</p>
-                    <p className="mt-2 text-sm text-white/55">Roster presence, discipline context and quick team actions.</p>
+                    <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">{team.gameName}</p>
+                    <p className="mt-2 text-sm text-white/85">Roster presence, discipline context and quick team actions.</p>
                   </div>
                   <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4 text-right">
                     <p className="text-xs uppercase tracking-[0.2em] text-white/30">Roster</p>
@@ -167,18 +167,18 @@ export function TeamsPage() {
                   </div>
                 </div>
                 <div className="mt-4 rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                  <div className="mb-4 flex items-center gap-2 text-sm text-white/50">
+                  <div className="mb-4 flex items-center gap-2 text-sm text-white/85">
                     <Users className="h-4 w-4 text-accent" />
                     {members.length} registered players
                   </div>
                   <div className="space-y-2">
                     {members.slice(0, 3).map((player) => (
-                      <div key={player.id} className="flex items-center justify-between text-sm text-white/75">
+                      <div key={player.id} className="flex items-center justify-between text-sm text-white/85">
                         <span>{player.nickname}</span>
-                        <span className="text-white/35">{player.elo} ELO</span>
+                        <span className="text-white/85">{player.elo} ELO</span>
                       </div>
                     ))}
-                    {!members.length ? <p className="text-sm text-white/35">No players assigned yet.</p> : null}
+                    {!members.length ? <p className="text-sm text-white/85">No players assigned yet.</p> : null}
                   </div>
                 </div>
                 <div className="mt-6 flex gap-2">
@@ -222,7 +222,7 @@ export function TeamsPage() {
         submitting={deleteMutation.isPending}
         onSubmit={() => void handleDelete()}
       >
-        <div className="rounded-2xl border border-danger/20 bg-danger/10 p-4 text-sm text-white/75">
+        <div className="rounded-2xl border border-danger/20 bg-danger/10 p-4 text-sm text-white/85">
           Players linked to this team may become invalid depending on backend constraints.
         </div>
       </EntityDialog>

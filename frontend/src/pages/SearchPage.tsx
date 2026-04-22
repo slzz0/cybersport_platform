@@ -67,7 +67,7 @@ export function SearchPage() {
               </div>
               <div>
                 <p className="font-display text-3xl font-bold tracking-wide text-white">Discover the ecosystem</p>
-                <p className="text-sm text-white/45">Use one focused search rail to scan across every core entity.</p>
+                <p className="text-sm text-white/65">Use one focused search rail to scan across every core entity.</p>
               </div>
             </div>
             <EmptyState
@@ -98,7 +98,7 @@ export function SearchPage() {
                       >
                         <div>
                           <p className="font-semibold text-white">{player.nickname}</p>
-                          <p className="mt-1 text-sm text-white/50">{player.teamName}</p>
+                          <p className="mt-1 text-sm text-white/85">{player.teamName}</p>
                         </div>
                         <Badge tone="accent">{player.elo} ELO</Badge>
                       </Link>
@@ -116,10 +116,10 @@ export function SearchPage() {
                           <TeamAvatar name={team.name} gameName={team.gameName} size="md" />
                           <div>
                             <p className="font-semibold text-white">{team.name}</p>
-                            <p className="mt-1 text-sm text-white/50">{team.gameName}</p>
+                            <p className="mt-1 text-sm text-white/85">{team.gameName}</p>
                           </div>
                         </div>
-                        <span className="text-sm text-white/35">#{team.id}</span>
+                        <span className="text-sm text-white/85">#{team.id}</span>
                       </Link>
                     ))
                   : null}
@@ -139,13 +139,13 @@ export function SearchPage() {
                             <p className="font-semibold text-white">{match.team2Name}</p>
                             <TeamAvatar name={match.team2Name} size="sm" />
                           </div>
-                          <p className="mt-1 text-sm text-white/50">{match.tournamentName}</p>
+                          <p className="mt-1 text-sm text-white/85">{match.tournamentName}</p>
                         </div>
                         <div className="text-right">
                           <Badge tone={getMatchStatus(match) === "Finished" ? "neutral" : "accent"}>
                             {getMatchStatus(match)}
                           </Badge>
-                          <p className="mt-2 text-xs text-white/35">{formatDateTime(match.playedAt)}</p>
+                          <p className="mt-2 text-xs text-white/85">{formatDateTime(match.playedAt)}</p>
                         </div>
                       </Link>
                     ))
@@ -160,7 +160,7 @@ export function SearchPage() {
                       >
                         <div>
                           <p className="font-semibold text-white">{tournament.name}</p>
-                          <p className="mt-1 text-sm text-white/50">{tournament.gameName}</p>
+                          <p className="mt-1 text-sm text-white/85">{tournament.gameName}</p>
                         </div>
                         <Badge
                           tone={

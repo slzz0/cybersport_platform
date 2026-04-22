@@ -153,7 +153,7 @@ export function MatchesPage() {
             <Card key={match.id} className="group">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-white/35">{match.tournamentName}</p>
+                  <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">{match.tournamentName}</p>
                   <Link to={`/matches/${match.id}`} className="mt-3 block font-display text-3xl font-bold tracking-wide text-white transition group-hover:text-accent">
                     {match.team1Name} vs {match.team2Name}
                   </Link>
@@ -230,7 +230,7 @@ export function MatchesPage() {
         submitting={deleteMutation.isPending}
         onSubmit={() => void handleDelete()}
       >
-        <div className="rounded-2xl border border-danger/20 bg-danger/10 p-4 text-sm text-white/75">
+        <div className="rounded-2xl border border-danger/20 bg-danger/10 p-4 text-sm text-white/85">
           Match history and result context for this entry will be removed.
         </div>
       </EntityDialog>

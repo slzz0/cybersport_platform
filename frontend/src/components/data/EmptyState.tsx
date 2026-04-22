@@ -15,7 +15,7 @@ export function EmptyState({ title, description, action }: EmptyStateProps) {
         <Ghost className="h-8 w-8 text-accent" />
       </div>
       <h3 className="font-display text-2xl font-bold tracking-wide text-white">{title}</h3>
-      <p className="mt-3 max-w-md text-sm text-white/55">{description}</p>
+      <p className="mt-3 max-w-md text-sm text-white/85">{description}</p>
       {action ? <div className="mt-6">{action}</div> : null}
     </Card>
   );

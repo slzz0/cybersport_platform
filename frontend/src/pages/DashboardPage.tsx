@@ -70,13 +70,13 @@ export function DashboardPage() {
                       <p className="font-semibold text-white">{match.team2Name}</p>
                       <TeamAvatar name={match.team2Name} size="sm" />
                     </div>
-                    <p className="mt-1 text-sm text-white/50">{match.tournamentName}</p>
+                    <p className="mt-1 text-sm text-white/70">{match.tournamentName}</p>
                   </div>
                   <Badge tone={getMatchStatus(match) === "Finished" ? "neutral" : "accent"}>
                     {getMatchStatus(match)}
                   </Badge>
                 </div>
-                <div className="mt-5 flex items-center justify-between text-sm text-white/55">
+                <div className="mt-5 flex items-center justify-between text-sm text-white/75">
                   <span>{formatDateTime(match.playedAt)}</span>
                   <span>
                     {match.scoreTeam1}:{match.scoreTeam2}
@@ -98,7 +98,7 @@ export function DashboardPage() {
           <Card key={tournament.id}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.28em] text-white/35">Tournament track</p>
+                <p className="text-[11px] uppercase tracking-[0.28em] text-white/75">Tournament track</p>
                 <h3 className="mt-3 font-display text-3xl font-bold text-white">{tournament.name}</h3>
               </div>
               <Badge

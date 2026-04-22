@@ -8,9 +8,9 @@ export function NotFoundPage() {
       <div className="rounded-[28px] border border-accent/20 bg-accent/10 p-5">
         <Compass className="h-10 w-10 text-accent" />
       </div>
-      <p className="mt-8 text-[11px] uppercase tracking-[0.32em] text-white/35">404</p>
+      <p className="mt-8 text-[11px] uppercase tracking-[0.32em] text-white/85">404</p>
       <h2 className="mt-3 font-display text-6xl font-bold tracking-wide text-white">Off the bracket</h2>
-      <p className="mt-4 max-w-xl text-sm text-white/55">
+      <p className="mt-4 max-w-xl text-sm text-white/85">
         This route is not part of the GRACEIT map. Head back to the dashboard and keep the circuit moving.
       </p>
       <Link

@@ -95,10 +95,10 @@ export function TournamentDetailsPage() {
                 className="block rounded-2xl border border-white/8 bg-white/[0.03] p-4 transition hover:border-white/15"
               >
                 <p className="font-semibold text-white">Match #{match.id}</p>
-                <p className="mt-1 text-sm text-white/50">{formatDate(match.playedAt)}</p>
+                <p className="mt-1 text-sm text-white/70">{formatDate(match.playedAt)}</p>
               </Link>
             ))}
-            {!matches.length ? <p className="text-sm text-white/45">No matches are linked to this tournament yet.</p> : null}
+            {!matches.length ? <p className="text-sm text-white/65">No matches are linked to this tournament yet.</p> : null}
           </div>
         </Card>
       </div>
@@ -118,13 +118,13 @@ export function TournamentDetailsPage() {
                 <TeamAvatar name={team.name} gameName={team.gameName} size="md" />
                 <div>
                   <p className="font-semibold text-white">{team.name}</p>
-                  <p className="mt-1 text-sm text-white/50">{team.gameName}</p>
+                  <p className="mt-1 text-sm text-white/70">{team.gameName}</p>
                 </div>
               </div>
-              <span className="text-sm text-white/35">Team #{team.id}</span>
+              <span className="text-sm text-white/75">Team #{team.id}</span>
             </Link>
           ))}
-          {!tournament.teams?.length ? <p className="text-sm text-white/45">No teams linked to this tournament yet.</p> : null}
+          {!tournament.teams?.length ? <p className="text-sm text-white/65">No teams linked to this tournament yet.</p> : null}
         </div>
       </Card>
     </>

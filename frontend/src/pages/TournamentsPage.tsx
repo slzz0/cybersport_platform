@@ -145,7 +145,7 @@ export function TournamentsPage() {
             <Card key={tournament.id} className="group flex h-full flex-col">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-white/35">{tournament.gameName}</p>
+                  <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">{tournament.gameName}</p>
                   <Link to={`/tournaments/${tournament.id}`} className="mt-3 block font-display text-3xl font-bold tracking-wide text-white transition group-hover:text-accent">
                     {tournament.name}
                   </Link>
@@ -218,7 +218,7 @@ export function TournamentsPage() {
         submitting={deleteMutation.isPending}
         onSubmit={() => void handleDelete()}
       >
-        <div className="rounded-2xl border border-danger/20 bg-danger/10 p-4 text-sm text-white/75">
+        <div className="rounded-2xl border border-danger/20 bg-danger/10 p-4 text-sm text-white/85">
           Related matches may no longer have a valid tournament reference after deletion.
         </div>
       </EntityDialog>

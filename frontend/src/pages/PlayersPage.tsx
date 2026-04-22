@@ -211,7 +211,7 @@ export function PlayersPage() {
         submitting={deleteMutation.isPending}
         onSubmit={() => void handleDelete()}
       >
-        <div className="rounded-2xl border border-danger/20 bg-danger/10 p-4 text-sm text-white/75">
+        <div className="rounded-2xl border border-danger/20 bg-danger/10 p-4 text-sm text-white/85">
           Player details and related views will no longer be accessible after deletion.
         </div>
       </EntityDialog>

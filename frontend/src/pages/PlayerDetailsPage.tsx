@@ -44,11 +44,11 @@ export function PlayerDetailsPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-[24px] border border-white/10 bg-black/20 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/35">ELO</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-white/75">ELO</p>
               <p className="mt-3 font-display text-5xl font-bold text-white">{player.elo}</p>
             </div>
             <div className="rounded-[24px] border border-white/10 bg-black/20 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/35">Team</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-white/75">Team</p>
               <p className="mt-3 text-lg font-semibold text-white">{player.teamName ?? `#${player.teamId}`}</p>
             </div>
           </div>
@@ -81,14 +81,14 @@ export function PlayerDetailsPage() {
                     <TeamAvatar name={teamQuery.data.name} gameName={teamQuery.data.gameName} size="md" />
                     <div>
                       <p className="font-semibold text-white">{teamQuery.data.name}</p>
-                      <p className="mt-1 text-sm text-white/50">{teamQuery.data.gameName}</p>
+                      <p className="mt-1 text-sm text-white/70">{teamQuery.data.gameName}</p>
                     </div>
                   </div>
                   <Badge tone="accent">Team #{teamQuery.data.id}</Badge>
                 </div>
               </Link>
             ) : (
-              <p className="text-sm text-white/45">Team details are unavailable right now.</p>
+              <p className="text-sm text-white/65">Team details are unavailable right now.</p>
             )}
           </div>
         </Card>

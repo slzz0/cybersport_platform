@@ -49,11 +49,11 @@ export function TeamDetailsPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-[24px] border border-white/10 bg-black/20 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/35">Game</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-white/75">Game</p>
               <p className="mt-3 text-lg font-semibold text-white">{team.gameName ?? `Game #${team.gameId}`}</p>
             </div>
             <div className="rounded-[24px] border border-white/10 bg-black/20 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/35">Roster size</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-white/75">Roster size</p>
               <p className="mt-3 font-display text-5xl font-bold text-white">{players.length}</p>
             </div>
           </div>
@@ -91,12 +91,12 @@ export function TeamDetailsPage() {
               >
                 <div>
                   <p className="font-semibold text-white">{player.nickname}</p>
-                  <p className="mt-1 text-sm text-white/50">ELO {player.elo}</p>
+                  <p className="mt-1 text-sm text-white/70">ELO {player.elo}</p>
                 </div>
-                <span className="text-sm text-white/35">Player #{player.id}</span>
+                <span className="text-sm text-white/75">Player #{player.id}</span>
               </Link>
             ))}
-            {!players.length ? <p className="text-sm text-white/45">No players assigned to this team.</p> : null}
+            {!players.length ? <p className="text-sm text-white/65">No players assigned to this team.</p> : null}
           </div>
         </Card>
       </div>
@@ -114,14 +114,14 @@ export function TeamDetailsPage() {
             >
               <div>
                 <p className="font-semibold text-white">{tournament.name}</p>
-                <p className="mt-1 text-sm text-white/50">
+                <p className="mt-1 text-sm text-white/70">
                   {tournament.gameName} • {tournament.prizePool}
                 </p>
               </div>
-              <span className="text-sm text-white/35">Tournament #{tournament.id}</span>
+              <span className="text-sm text-white/75">Tournament #{tournament.id}</span>
             </Link>
           ))}
-          {!team.tournaments?.length ? <p className="text-sm text-white/45">No tournaments linked to this team.</p> : null}
+          {!team.tournaments?.length ? <p className="text-sm text-white/65">No tournaments linked to this team.</p> : null}
         </div>
       </Card>
     </>

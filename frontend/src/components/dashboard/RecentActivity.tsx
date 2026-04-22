@@ -13,7 +13,7 @@ interface ActivityItem {
 export function RecentActivity({ items }: { items: ActivityItem[] }) {
   return (
     <Card className="h-full">
-      <p className="text-[11px] uppercase tracking-[0.3em] text-white/35">Recent activity</p>
+      <p className="text-[11px] uppercase tracking-[0.3em] text-white/75">Recent activity</p>
       <h3 className="mt-3 font-display text-2xl font-bold text-white">Latest additions</h3>
       <div className="mt-6 space-y-3">
         {items.map((item) => (
@@ -25,9 +25,9 @@ export function RecentActivity({ items }: { items: ActivityItem[] }) {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="font-medium text-white">{item.title}</p>
-                <p className="mt-1 text-sm text-white/50">{item.subtitle}</p>
+                <p className="mt-1 text-sm text-white/70">{item.subtitle}</p>
               </div>
-              <p className="text-xs text-white/35">{formatDateTime(item.timestamp)}</p>
+              <p className="text-xs text-white/75">{formatDateTime(item.timestamp)}</p>
             </div>
           </Link>
         ))}
