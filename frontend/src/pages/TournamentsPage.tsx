@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { EmptyState } from "@/components/data/EmptyState";
 import { ErrorState } from "@/components/data/ErrorState";
@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
+import { Pagination } from "@/components/ui/Pagination";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Select } from "@/components/ui/Select";
 import { useGames } from "@/features/games/hooks";
@@ -22,10 +23,12 @@ import { formatDate, getTournamentStatus } from "@/lib/format";
 import type { Tournament, TournamentPayload } from "@/types/entities";
 
 const formId = "tournament-form";
+const TOURNAMENTS_PAGE_SIZE = 6;
 
 export function TournamentsPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [page, setPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<Tournament | null>(null);
   const deferredSearch = useDeferredValue(search);
 
@@ -35,6 +38,25 @@ export function TournamentsPage() {
   const matchesQuery = useMatches();
   const gamesQuery = useGames();
   const { createMutation, updateMutation, deleteMutation } = useTournamentMutations();
+
+  const tournaments =
+    tournamentsQuery.data && gamesQuery.data && matchesQuery.data
+      ? enrichTournaments(tournamentsQuery.data, gamesQuery.data, matchesQuery.data)
+          .filter((tournament) => tournament.name.toLowerCase().includes(deferredSearch.toLowerCase()))
+          .filter((tournament) => (statusFilter ? getTournamentStatus(tournament) === statusFilter : true))
+      : [];
+  const totalPages = Math.max(1, Math.ceil(tournaments.length / TOURNAMENTS_PAGE_SIZE));
+  const paginatedTournaments = tournaments.slice((page - 1) * TOURNAMENTS_PAGE_SIZE, page * TOURNAMENTS_PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [deferredSearch, statusFilter]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   if (tournamentsQuery.isLoading || matchesQuery.isLoading || gamesQuery.isLoading) {
     return <SkeletonGrid count={6} />;
@@ -59,10 +81,6 @@ export function TournamentsPage() {
       />
     );
   }
-
-  const tournaments = enrichTournaments(tournamentsQuery.data, gamesQuery.data, matchesQuery.data)
-    .filter((tournament) => tournament.name.toLowerCase().includes(deferredSearch.toLowerCase()))
-    .filter((tournament) => (statusFilter ? getTournamentStatus(tournament) === statusFilter : true));
 
   const handleSubmit = async (payload: TournamentPayload) => {
     try {
@@ -140,55 +158,64 @@ export function TournamentsPage() {
           action={<Button onClick={tournamentDialog.openCreate}>Add tournament</Button>}
         />
       ) : (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {tournaments.map((tournament) => (
-            <Card key={tournament.id} className="group flex h-full flex-col">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">{tournament.gameName}</p>
-                  <Link to={`/tournaments/${tournament.id}`} className="mt-3 block font-display text-3xl font-bold tracking-wide text-white transition group-hover:text-accent">
-                    {tournament.name}
-                  </Link>
+        <div className="space-y-4">
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {paginatedTournaments.map((tournament) => (
+              <Card key={tournament.id} className="group flex h-full flex-col">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">{tournament.gameName}</p>
+                    <Link to={`/tournaments/${tournament.id}`} className="mt-3 block font-display text-3xl font-bold tracking-wide text-white transition group-hover:text-accent">
+                      {tournament.name}
+                    </Link>
+                  </div>
+                  <Badge
+                    tone={
+                      getTournamentStatus(tournament) === "Active"
+                        ? "success"
+                        : getTournamentStatus(tournament) === "Upcoming"
+                          ? "accent"
+                          : "neutral"
+                    }
+                  >
+                    {getTournamentStatus(tournament)}
+                  </Badge>
                 </div>
-                <Badge
-                  tone={
-                    getTournamentStatus(tournament) === "Active"
-                      ? "success"
-                      : getTournamentStatus(tournament) === "Upcoming"
-                        ? "accent"
-                        : "neutral"
-                  }
-                >
-                  {getTournamentStatus(tournament)}
-                </Badge>
-              </div>
-              <div className="mt-6 grid grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Window</p>
-                  <p className="mt-2 text-sm text-white">
-                    {formatDate(tournament.startDate)} - {formatDate(tournament.endDate)}
-                  </p>
+                <div className="mt-6 grid grid-cols-2 gap-4">
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Window</p>
+                    <p className="mt-2 text-sm text-white">
+                      {formatDate(tournament.startDate)} - {formatDate(tournament.endDate)}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Matches</p>
+                    <p className="mt-2 text-sm text-white">{tournament.matchCount}</p>
+                  </div>
                 </div>
-                <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Matches</p>
-                  <p className="mt-2 text-sm text-white">{tournament.matchCount}</p>
+                <div className="mt-4 rounded-2xl border border-white/8 bg-white/[0.03] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Prize pool</p>
+                  <p className="mt-2 font-display text-2xl text-white">{tournament.prizePool}</p>
                 </div>
-              </div>
-              <div className="mt-4 rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Prize pool</p>
-                <p className="mt-2 font-display text-2xl text-white">{tournament.prizePool}</p>
-              </div>
-              <div className="mt-6 flex gap-2">
-                <Button variant="secondary" className="flex-1" onClick={() => tournamentDialog.openEdit(tournament)}>
-                  <Pencil className="h-4 w-4" />
-                  Edit
-                </Button>
-                <Button variant="ghost" className="px-4 text-danger hover:text-danger" onClick={() => setDeleteTarget(tournament)}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </Card>
-          ))}
+                <div className="mt-6 flex gap-2">
+                  <Button variant="secondary" className="flex-1" onClick={() => tournamentDialog.openEdit(tournament)}>
+                    <Pencil className="h-4 w-4" />
+                    Edit
+                  </Button>
+                  <Button variant="ghost" className="px-4 text-danger hover:text-danger" onClick={() => setDeleteTarget(tournament)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            totalItems={tournaments.length}
+            pageSize={TOURNAMENTS_PAGE_SIZE}
+            onPageChange={setPage}
+          />
         </div>
       )}
 

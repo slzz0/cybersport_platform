@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { EmptyState } from "@/components/data/EmptyState";
 import { ErrorState } from "@/components/data/ErrorState";
@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
+import { Pagination } from "@/components/ui/Pagination";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Select } from "@/components/ui/Select";
 import { useMatchMutations, useMatches } from "@/features/matches/hooks";
@@ -23,10 +24,12 @@ import { formatDateTime, getMatchStatus } from "@/lib/format";
 import type { Match, MatchPayload } from "@/types/entities";
 
 const formId = "match-form";
+const MATCHES_PAGE_SIZE = 6;
 
 export function MatchesPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [page, setPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<Match | null>(null);
   const deferredSearch = useDeferredValue(search);
 
@@ -36,6 +39,32 @@ export function MatchesPage() {
   const teamsQuery = useTeams();
   const tournamentsQuery = useTournaments();
   const { createMutation, updateMutation, deleteMutation } = useMatchMutations();
+
+  const matches =
+    matchesQuery.data && teamsQuery.data && tournamentsQuery.data
+      ? enrichMatches(matchesQuery.data, teamsQuery.data, tournamentsQuery.data)
+          .filter((match) => {
+            const searchLower = deferredSearch.toLowerCase();
+            return (
+              match.team1Name.toLowerCase().includes(searchLower) ||
+              match.team2Name.toLowerCase().includes(searchLower) ||
+              match.tournamentName.toLowerCase().includes(searchLower)
+            );
+          })
+          .filter((match) => (statusFilter ? getMatchStatus(match) === statusFilter : true))
+      : [];
+  const totalPages = Math.max(1, Math.ceil(matches.length / MATCHES_PAGE_SIZE));
+  const paginatedMatches = matches.slice((page - 1) * MATCHES_PAGE_SIZE, page * MATCHES_PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [deferredSearch, statusFilter]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   if (matchesQuery.isLoading || teamsQuery.isLoading || tournamentsQuery.isLoading) {
     return <SkeletonGrid count={6} />;
@@ -60,17 +89,6 @@ export function MatchesPage() {
       />
     );
   }
-
-  const matches = enrichMatches(matchesQuery.data, teamsQuery.data, tournamentsQuery.data)
-    .filter((match) => {
-      const searchLower = deferredSearch.toLowerCase();
-      return (
-        match.team1Name.toLowerCase().includes(searchLower) ||
-        match.team2Name.toLowerCase().includes(searchLower) ||
-        match.tournamentName.toLowerCase().includes(searchLower)
-      );
-    })
-    .filter((match) => (statusFilter ? getMatchStatus(match) === statusFilter : true));
 
   const handleSubmit = async (payload: MatchPayload) => {
     try {
@@ -148,58 +166,67 @@ export function MatchesPage() {
           action={<Button onClick={matchDialog.openCreate}>Add match</Button>}
         />
       ) : (
-        <div className="grid gap-5 xl:grid-cols-2">
-          {matches.map((match) => (
-            <Card key={match.id} className="group">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">{match.tournamentName}</p>
-                  <Link to={`/matches/${match.id}`} className="mt-3 block font-display text-3xl font-bold tracking-wide text-white transition group-hover:text-accent">
-                    {match.team1Name} vs {match.team2Name}
-                  </Link>
-                </div>
-                <Badge tone={getMatchStatus(match) === "Finished" ? "neutral" : "accent"}>{getMatchStatus(match)}</Badge>
-              </div>
-              <div className="matchup-divider mt-6 grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-[22px] border border-white/8 bg-white/[0.025] px-4 py-5">
-                <div className="flex items-center gap-3">
-                  <TeamAvatar name={match.team1Name} size="md" />
+        <div className="space-y-4">
+          <div className="grid gap-5 xl:grid-cols-2">
+            {paginatedMatches.map((match) => (
+              <Card key={match.id} className="group">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Team 1</p>
-                    <p className="mt-1 font-semibold text-white">{match.team1Name}</p>
+                    <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">{match.tournamentName}</p>
+                    <Link to={`/matches/${match.id}`} className="mt-3 block font-display text-3xl font-bold tracking-wide text-white transition group-hover:text-accent">
+                      {match.team1Name} vs {match.team2Name}
+                    </Link>
+                  </div>
+                  <Badge tone={getMatchStatus(match) === "Finished" ? "neutral" : "accent"}>{getMatchStatus(match)}</Badge>
+                </div>
+                <div className="matchup-divider mt-6 grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-[22px] border border-white/8 bg-white/[0.025] px-4 py-5">
+                  <div className="flex items-center gap-3">
+                    <TeamAvatar name={match.team1Name} size="md" />
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Team 1</p>
+                      <p className="mt-1 font-semibold text-white">{match.team1Name}</p>
+                    </div>
+                  </div>
+                  <div className="h-12 w-12" />
+                  <div className="flex items-center justify-end gap-3 text-right">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Team 2</p>
+                      <p className="mt-1 font-semibold text-white">{match.team2Name}</p>
+                    </div>
+                    <TeamAvatar name={match.team2Name} size="md" />
                   </div>
                 </div>
-                <div className="h-12 w-12" />
-                <div className="flex items-center justify-end gap-3 text-right">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Team 2</p>
-                    <p className="mt-1 font-semibold text-white">{match.team2Name}</p>
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Score</p>
+                    <p className="mt-2 font-display text-3xl text-white">
+                      {match.scoreTeam1}:{match.scoreTeam2}
+                    </p>
                   </div>
-                  <TeamAvatar name={match.team2Name} size="md" />
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Played at</p>
+                    <p className="mt-2 text-sm text-white">{formatDateTime(match.playedAt)}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Score</p>
-                  <p className="mt-2 font-display text-3xl text-white">
-                    {match.scoreTeam1}:{match.scoreTeam2}
-                  </p>
+                <div className="mt-6 flex gap-2">
+                  <Button variant="secondary" className="flex-1" onClick={() => matchDialog.openEdit(match)}>
+                    <Pencil className="h-4 w-4" />
+                    Edit
+                  </Button>
+                  <Button variant="ghost" className="px-4 text-danger hover:text-danger" onClick={() => setDeleteTarget(match)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
-                <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Played at</p>
-                  <p className="mt-2 text-sm text-white">{formatDateTime(match.playedAt)}</p>
-                </div>
-              </div>
-              <div className="mt-6 flex gap-2">
-                <Button variant="secondary" className="flex-1" onClick={() => matchDialog.openEdit(match)}>
-                  <Pencil className="h-4 w-4" />
-                  Edit
-                </Button>
-                <Button variant="ghost" className="px-4 text-danger hover:text-danger" onClick={() => setDeleteTarget(match)}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            ))}
+          </div>
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            totalItems={matches.length}
+            pageSize={MATCHES_PAGE_SIZE}
+            onPageChange={setPage}
+          />
         </div>
       )}
 

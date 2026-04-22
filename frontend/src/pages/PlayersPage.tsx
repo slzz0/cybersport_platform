@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { DataTable } from "@/components/data/DataTable";
 import { EmptyState } from "@/components/data/EmptyState";
@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
+import { Pagination } from "@/components/ui/Pagination";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Select } from "@/components/ui/Select";
 import { usePlayerMutations, usePlayers } from "@/features/players/hooks";
@@ -21,11 +22,13 @@ import { useToastStore } from "@/hooks/useToastStore";
 import type { Player, PlayerPayload } from "@/types/entities";
 
 const formId = "player-form";
+const PLAYERS_PAGE_SIZE = 10;
 
 export function PlayersPage() {
   const [search, setSearch] = useState("");
   const [teamFilter, setTeamFilter] = useState("");
   const [minElo, setMinElo] = useState("");
+  const [page, setPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<Player | null>(null);
   const deferredSearch = useDeferredValue(search);
 
@@ -34,6 +37,26 @@ export function PlayersPage() {
   const playersQuery = usePlayers();
   const teamsQuery = useTeams();
   const { createMutation, updateMutation, deleteMutation } = usePlayerMutations();
+
+  const players =
+    playersQuery.data && teamsQuery.data
+      ? enrichPlayers(playersQuery.data, teamsQuery.data)
+          .filter((player) => player.nickname.toLowerCase().includes(deferredSearch.toLowerCase()))
+          .filter((player) => (teamFilter ? `${player.teamId}` === teamFilter : true))
+          .filter((player) => (minElo ? player.elo >= Number(minElo) : true))
+      : [];
+  const totalPages = Math.max(1, Math.ceil(players.length / PLAYERS_PAGE_SIZE));
+  const paginatedPlayers = players.slice((page - 1) * PLAYERS_PAGE_SIZE, page * PLAYERS_PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [deferredSearch, teamFilter, minElo]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   if (playersQuery.isLoading || teamsQuery.isLoading) {
     return <SkeletonGrid count={6} />;
@@ -54,11 +77,6 @@ export function PlayersPage() {
       />
     );
   }
-
-  const players = enrichPlayers(playersQuery.data, teamsQuery.data)
-    .filter((player) => player.nickname.toLowerCase().includes(deferredSearch.toLowerCase()))
-    .filter((player) => (teamFilter ? `${player.teamId}` === teamFilter : true))
-    .filter((player) => (minElo ? player.elo >= Number(minElo) : true));
 
   const handleSubmit = async (payload: PlayerPayload) => {
     try {
@@ -141,48 +159,57 @@ export function PlayersPage() {
           action={<Button onClick={playerDialog.openCreate}>Add player</Button>}
         />
       ) : (
-        <DataTable<Player>
-          data={players}
-          columns={[
-            {
-              key: "nickname",
-              header: "Player",
-              render: (player) => (
-                <div>
-                  <Link to={`/players/${player.id}`} className="font-semibold text-white hover:text-accent">
-                    {player.nickname}
-                  </Link>
-                  <p className="mt-1 text-xs text-white/40">ID #{player.id}</p>
-                </div>
-              ),
-            },
-            {
-              key: "team",
-              header: "Team",
-              render: (player) => <span>{player.teamName}</span>,
-            },
-            {
-              key: "elo",
-              header: "ELO",
-              render: (player) => <Badge tone="accent">{player.elo}</Badge>,
-            },
-            {
-              key: "actions",
-              header: "Actions",
-              className: "w-[180px]",
-              render: (player) => (
-                <div className="flex gap-2">
-                  <Button variant="ghost" className="h-10 px-3" onClick={() => playerDialog.openEdit(player)}>
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" className="h-10 px-3 text-danger hover:text-danger" onClick={() => setDeleteTarget(player)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              ),
-            },
-          ]}
-        />
+        <div className="space-y-4">
+          <DataTable<Player>
+            data={paginatedPlayers}
+            columns={[
+              {
+                key: "nickname",
+                header: "Player",
+                render: (player) => (
+                  <div>
+                    <Link to={`/players/${player.id}`} className="font-semibold text-white hover:text-accent">
+                      {player.nickname}
+                    </Link>
+                    <p className="mt-1 text-xs text-white/40">ID #{player.id}</p>
+                  </div>
+                ),
+              },
+              {
+                key: "team",
+                header: "Team",
+                render: (player) => <span>{player.teamName}</span>,
+              },
+              {
+                key: "elo",
+                header: "ELO",
+                render: (player) => <Badge tone="accent">{player.elo}</Badge>,
+              },
+              {
+                key: "actions",
+                header: "Actions",
+                className: "w-[180px]",
+                render: (player) => (
+                  <div className="flex gap-2">
+                    <Button variant="ghost" className="h-10 px-3" onClick={() => playerDialog.openEdit(player)}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" className="h-10 px-3 text-danger hover:text-danger" onClick={() => setDeleteTarget(player)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ),
+              },
+            ]}
+          />
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            totalItems={players.length}
+            pageSize={PLAYERS_PAGE_SIZE}
+            onPageChange={setPage}
+          />
+        </div>
       )}
 
       <EntityDialog

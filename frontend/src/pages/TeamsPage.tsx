@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 import { Pencil, Plus, Trash2, Users } from "lucide-react";
 import { EmptyState } from "@/components/data/EmptyState";
 import { ErrorState } from "@/components/data/ErrorState";
@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
+import { Pagination } from "@/components/ui/Pagination";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Select } from "@/components/ui/Select";
 import { useGames } from "@/features/games/hooks";
@@ -22,10 +23,12 @@ import { useToastStore } from "@/hooks/useToastStore";
 import type { Team, TeamPayload } from "@/types/entities";
 
 const formId = "team-form";
+const TEAMS_PAGE_SIZE = 6;
 
 export function TeamsPage() {
   const [search, setSearch] = useState("");
   const [gameFilter, setGameFilter] = useState("");
+  const [page, setPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<Team | null>(null);
   const deferredSearch = useDeferredValue(search);
 
@@ -35,6 +38,25 @@ export function TeamsPage() {
   const gamesQuery = useGames();
   const playersQuery = usePlayers();
   const { createMutation, updateMutation, deleteMutation } = useTeamMutations();
+
+  const teams =
+    teamsQuery.data && gamesQuery.data
+      ? enrichTeams(teamsQuery.data, gamesQuery.data)
+          .filter((team) => team.name.toLowerCase().includes(deferredSearch.toLowerCase()))
+          .filter((team) => (gameFilter ? `${team.gameId}` === gameFilter : true))
+      : [];
+  const totalPages = Math.max(1, Math.ceil(teams.length / TEAMS_PAGE_SIZE));
+  const paginatedTeams = teams.slice((page - 1) * TEAMS_PAGE_SIZE, page * TEAMS_PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [deferredSearch, gameFilter]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   if (teamsQuery.isLoading || gamesQuery.isLoading || playersQuery.isLoading) {
     return <SkeletonGrid count={6} />;
@@ -59,10 +81,6 @@ export function TeamsPage() {
       />
     );
   }
-
-  const teams = enrichTeams(teamsQuery.data, gamesQuery.data)
-    .filter((team) => team.name.toLowerCase().includes(deferredSearch.toLowerCase()))
-    .filter((team) => (gameFilter ? `${team.gameId}` === gameFilter : true));
 
   const handleSubmit = async (payload: TeamPayload) => {
     try {
@@ -136,63 +154,72 @@ export function TeamsPage() {
           action={<Button onClick={teamDialog.openCreate}>Add team</Button>}
         />
       ) : (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {teams.map((team) => {
-            const members = getTeamPlayers(team.id, playersQuery.data);
-            return (
-              <Card key={team.id} className="group flex h-full flex-col">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-4">
-                    <TeamAvatar name={team.name} gameName={team.gameName} size="lg" />
-                    <div>
+        <div className="space-y-4">
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {paginatedTeams.map((team) => {
+              const members = getTeamPlayers(team.id, playersQuery.data);
+              return (
+                <Card key={team.id} className="group flex h-full flex-col">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                      <TeamAvatar name={team.name} gameName={team.gameName} size="lg" />
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">{team.gameName}</p>
+                        <Link
+                          to={`/teams/${team.id}`}
+                          className="mt-3 block font-display text-3xl font-bold tracking-wide text-white transition group-hover:text-accent"
+                        >
+                          {team.name}
+                        </Link>
+                      </div>
+                    </div>
+                    <Badge tone="accent">#{team.id}</Badge>
+                  </div>
+                  <div className="mt-6 grid gap-4 sm:grid-cols-[1fr_auto]">
+                    <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
                       <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">{team.gameName}</p>
-                      <Link
-                        to={`/teams/${team.id}`}
-                        className="mt-3 block font-display text-3xl font-bold tracking-wide text-white transition group-hover:text-accent"
-                      >
-                        {team.name}
-                      </Link>
+                      <p className="mt-2 text-sm text-white/85">Roster presence, discipline context and quick team actions.</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4 text-right">
+                      <p className="text-xs uppercase tracking-[0.2em] text-white/30">Roster</p>
+                      <p className="mt-2 font-display text-3xl text-white">{members.length}</p>
                     </div>
                   </div>
-                  <Badge tone="accent">#{team.id}</Badge>
-                </div>
-                <div className="mt-6 grid gap-4 sm:grid-cols-[1fr_auto]">
-                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                    <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">{team.gameName}</p>
-                    <p className="mt-2 text-sm text-white/85">Roster presence, discipline context and quick team actions.</p>
+                  <div className="mt-4 rounded-2xl border border-white/8 bg-white/[0.03] p-4">
+                    <div className="mb-4 flex items-center gap-2 text-sm text-white/85">
+                      <Users className="h-4 w-4 text-accent" />
+                      {members.length} registered players
+                    </div>
+                    <div className="space-y-2">
+                      {members.slice(0, 3).map((player) => (
+                        <div key={player.id} className="flex items-center justify-between text-sm text-white/85">
+                          <span>{player.nickname}</span>
+                          <span className="text-white/85">{player.elo} ELO</span>
+                        </div>
+                      ))}
+                      {!members.length ? <p className="text-sm text-white/85">No players assigned yet.</p> : null}
+                    </div>
                   </div>
-                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4 text-right">
-                    <p className="text-xs uppercase tracking-[0.2em] text-white/30">Roster</p>
-                    <p className="mt-2 font-display text-3xl text-white">{members.length}</p>
+                  <div className="mt-6 flex gap-2">
+                    <Button variant="secondary" className="flex-1" onClick={() => teamDialog.openEdit(team)}>
+                      <Pencil className="h-4 w-4" />
+                      Edit
+                    </Button>
+                    <Button variant="ghost" className="px-4 text-danger hover:text-danger" onClick={() => setDeleteTarget(team)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
-                </div>
-                <div className="mt-4 rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                  <div className="mb-4 flex items-center gap-2 text-sm text-white/85">
-                    <Users className="h-4 w-4 text-accent" />
-                    {members.length} registered players
-                  </div>
-                  <div className="space-y-2">
-                    {members.slice(0, 3).map((player) => (
-                      <div key={player.id} className="flex items-center justify-between text-sm text-white/85">
-                        <span>{player.nickname}</span>
-                        <span className="text-white/85">{player.elo} ELO</span>
-                      </div>
-                    ))}
-                    {!members.length ? <p className="text-sm text-white/85">No players assigned yet.</p> : null}
-                  </div>
-                </div>
-                <div className="mt-6 flex gap-2">
-                  <Button variant="secondary" className="flex-1" onClick={() => teamDialog.openEdit(team)}>
-                    <Pencil className="h-4 w-4" />
-                    Edit
-                  </Button>
-                  <Button variant="ghost" className="px-4 text-danger hover:text-danger" onClick={() => setDeleteTarget(team)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </Card>
-            );
-          })}
+                </Card>
+              );
+            })}
+          </div>
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            totalItems={teams.length}
+            pageSize={TEAMS_PAGE_SIZE}
+            onPageChange={setPage}
+          />
         </div>
       )}
 
