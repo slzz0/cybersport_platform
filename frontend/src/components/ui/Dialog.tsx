@@ -25,14 +25,19 @@ export function Dialog({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#05070bcc] px-4 backdrop-blur-sm">
-      <div className="absolute inset-0" onClick={onClose} aria-hidden="true" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6">
+      <div
+        className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,122,47,0.12),transparent_42%),linear-gradient(180deg,rgba(7,10,15,0.48),rgba(7,10,15,0.72))] backdrop-blur-[3px]"
+        onClick={onClose}
+        aria-hidden="true"
+      />
       <div
         className={cn(
-          "relative z-10 w-full max-w-2xl rounded-[30px] border border-white/10 bg-[#101620] p-6 shadow-panel",
+          "relative z-10 max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-[30px] border border-white/14 bg-[#101620f2] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.48)]",
           className,
         )}
       >
+        <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>
             <h3 className="font-display text-3xl font-bold tracking-wide text-white">{title}</h3>
@@ -54,4 +59,3 @@ export function Dialog({
     </div>
   );
 }
-
